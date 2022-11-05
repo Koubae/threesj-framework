@@ -1,30 +1,8 @@
 import * as THREE from './node_modules/three/build/three.module.js';
 
-import {
-    recipe01,
-    recipe02,
-    recipe03,
-    recipe04,
-    recipe05,
-    latheGeometry,
-    tankMultiCamera,
-
-} from "./recipes/recipes.js";
-
 // import mapping
-const RECIPES = {
-    "tutorial/01.js": recipe01,
-    "tutorial/02.js": recipe02,
-    "tutorial/03.js": recipe03,
-    "tutorial/04.js": recipe04,
-    "tutorial/05.js": recipe05,
-
-
-    // Shapes
-    "shapes/latheGeometry.js": latheGeometry,
-
-    // Demos
-    "demos/tankMultiCamera.js": tankMultiCamera,
+const DEMOS = {
+   
 };
 
 // DOM Elements
@@ -104,10 +82,10 @@ function unloadScript(event) {
 function loadScript(event) {
   let recipeLink = this.dataset.recipe;
 
-  if (recipeLink in RECIPES) {
+  if (recipeLink in DEMOS) {
       document.title = recipeLink;
       hideContent();
-      RECIPES[recipeLink](THREE);
+      DEMOS[recipeLink](THREE);
   } else {
       alert(`Link ${recipeLink} not available!`);
   }
