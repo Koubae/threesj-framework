@@ -1,8 +1,14 @@
-import * as THREE from './node_modules/three/build/three.module.js';
+// Load App
+import { App } from "../build/main.js";
+
+// Load Demos
+import {
+    demo01
+} from "./demos/demos.js";
 
 // import mapping
 const DEMOS = {
-   
+    demo01: demo01,
 };
 
 // DOM Elements
@@ -20,9 +26,10 @@ recipeLinks.forEach(link => {
 
 function triggerLinkOnStart(linkIndex = null) {
     if (linkIndex === null)  return;
+    if (!(linkIndex in recipeLinks)) return;
     recipeLinks[linkIndex].click();
 }
-triggerLinkOnStart(6);
+triggerLinkOnStart(0);
 
 
 
@@ -85,7 +92,7 @@ function loadScript(event) {
   if (recipeLink in DEMOS) {
       document.title = recipeLink;
       hideContent();
-      DEMOS[recipeLink](THREE);
+      DEMOS[recipeLink](App);
   } else {
       alert(`Link ${recipeLink} not available!`);
   }

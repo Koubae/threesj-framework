@@ -18,7 +18,7 @@
 <section class="content-wrapper">
 
     <header class="box header">
-        <h1>Threejs Recipes</h1>
+        <h1>Threejs Framework Recipes</h1>
     </header>
     <aside class="box sidebar">
 
@@ -29,60 +29,11 @@
             <ol>
                 <li>
                     <a class="recipeLink" href="javascript:void(0);"
-                       data-recipe="tutorial/01.js">
-                        Minimal
-                    </a>
-                </li>
-                <li>
-                    <a class="recipeLink" href="javascript:void(0);"
-                       data-recipe="tutorial/02.js">
-                        Lines
-                    </a>
-                </li>
-                <li>
-                    <a class="recipeLink" href="javascript:void(0);"
-                       data-recipe="tutorial/03.js">
-                        Lines Update
-                    </a>
-                </li>
-                <li>
-                    <a class="recipeLink" href="javascript:void(0);"
-                       data-recipe="tutorial/04.js">
-                        Line follow mouse
-                    </a>
-                </li>
-                <li>
-                    <a class="recipeLink" href="javascript:void(0);"
-                       data-recipe="tutorial/05.js">
-                        3 Cubes Rotating + Screen resize
+                       data-recipe="demo01">
+                        World Ground
                     </a>
                 </li>
 
-            </ol>
-        </fieldset>
-
-        <fieldset>
-            <legend>Recipes</legend>
-            <ol>
-                <li>
-                    <a class="recipeLink" href="javascript:void(0);"
-                       data-recipe="shapes/latheGeometry.js">
-                        LatheGeometry
-                    </a>
-                </li>
-            </ol>
-        </fieldset>
-
-
-        <fieldset>
-            <legend>Demos</legend>
-            <ol>
-                <li>
-                    <a class="recipeLink" href="javascript:void(0);"
-                       data-recipe="demos/tankMultiCamera.js">
-                        Tank with Multi Cameras
-                    </a>
-                </li>
             </ol>
         </fieldset>
 
@@ -92,5 +43,14 @@
 
 
 </body>
-<script type="module" src="main.js"></script>
+<!-- Import map required to load node modules-->
+<script type="importmap">
+  {
+    "imports": {
+      "three": "../node_modules/three/build/three.module.js",
+      "three/": "../node_modules/three/"
+    }
+  }
+</script>
+<script type="module" src="index.js"></script>
 </html>

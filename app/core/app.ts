@@ -1,8 +1,38 @@
-//import * as THREE from '../../node_modules/three/build/three.module.js';
 import * as THREE from 'three';
 import { OrbitControls} from "three/examples/jsm/controls/OrbitControls.js";
+import {WebGLRenderer} from "three/src/renderers/WebGLRenderer";
 
-export function app(cameraSettings, withClock = false) {
+type Nullable<T> = T | null; // check how to import this
+
+export default class App {
+
+    // props public
+    renderer: Nullable<WebGLRenderer> = null;
+    stage = null;
+    cameras = [];
+
+    // props private
+    #config = {} // todo make default settings;
+
+
+    constructor(config: Object) {
+        this.#config = config;
+        this.#_init();
+    }
+
+    #_init() {
+        // create renderer
+        this.renderer = new THREE.WebGLRenderer();
+        //this.renderer.set
+        this.renderer.setSize( window.innerWidth, window.innerHeight );
+        document.body.appendChild( this.renderer.domElement );
+    }
+
+
+}
+/*
+
+export function App1(cameraSettings, withClock = false) {
     // renderer
     const renderer = new THREE.WebGLRenderer();
     renderer.setSize( window.innerWidth, window.innerHeight );
@@ -41,4 +71,4 @@ export function app(cameraSettings, withClock = false) {
     }
     return [renderer, camera, scene, new THREE.Clock()];
 
-}
+}*/
