@@ -74,6 +74,7 @@ export default class App {
     world: World;
 
     // DOM Events
+    domLoaded: boolean = document.readyState === "complete"; // loaded or interactive when is not loaded or ready!
     eventManager: EventManager;
     // DOM Elements
     canvas: HTMLCanvasElement;
@@ -150,15 +151,21 @@ export default class App {
              */
         }
 
-        this.world = new World(this.scene, this.#config.world);
+        this.world = new World(this.scene, {...this.#config.world});
 
 
     }
 
     run() {
-        window.addEventListener("load", () => {
+        if (!this.domLoaded) {
+            window.addEventListener("load", () => {
+                this.domLoaded = true;
+                this.#_update();
+            }, false);
+        } else {
             this.#_update();
-        }, false);
+        }
+
     }
 
     #_update() {

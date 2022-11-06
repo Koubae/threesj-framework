@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import {AmbientLight, DirectionalLight, HemisphereLight, Scene} from "three";
+import GroundFlat from "../components/world/GroundFlat.js";
 
 const LIGHT_HEMISPHERE_COLORS = {
     natural: {
@@ -18,6 +19,7 @@ export default class World {
     // ----------------- < PUBLIC > ----------------- \\
     public scene: Scene;
     public lights: THREE.Light[] = [];
+    public ground: GroundFlat;
     public debug: boolean = false;
     // ----------------- < PRIVATE > ----------------- \\
     #settings: {[key: string]: any} = {}
@@ -28,7 +30,7 @@ export default class World {
         this.debug = "debug" in settings && settings.debug || this.debug;
 
         this.#loadWorldLight();
-
+        this.#loadWorldGround();
 
     }
 
@@ -69,6 +71,19 @@ export default class World {
         this.addLight(
             sunLight
         );
+    }
+
+    #loadWorldGround() {
+        let settings = this.#settings.ground;
+        if (!settings) settings = {};
+        const size = settings.size ? settings.size : new THREE.Vector2(100, 100);
+        const side = settings.side ? settings.side : THREE.FrontSide;
+        const helper = settings.helper ? settings.helper : false;
+        this.ground = new GroundFlat(this.scene, {
+            size: size,
+            side: side,
+            helper: helper,
+        });
     }
 
     // ---------------------------

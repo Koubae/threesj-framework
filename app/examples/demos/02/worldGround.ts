@@ -24,18 +24,16 @@ export default function demo(App: any) {
         },
         world: {
             debug: true,
+            ground: {
+                size: new THREE.Vector2(1000, 1000),
+                side: THREE.DoubleSide,
+                helper: true,
+            }
         }
     };
     const app = new App(appSettings);
     app.cameraMain.position.set(0, 2, 2);
     app.cameraMain.lookAt(0, 0, 0);
-
-    const components = App.lib.components;
-    const ground = new components.GroundFlat(app.scene, {
-        size: new THREE.Vector2(100, 100),
-        side: THREE.DoubleSide,
-        helper: true,
-    });
 
 
 
