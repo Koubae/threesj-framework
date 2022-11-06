@@ -8,6 +8,9 @@
     "three": "^0.146.0"
   },
   "devDependencies": {
-    "@types/three": "^0.144.0"
+    "@types/three": "^0.144.0",
+    "nodemon": "^2.0.20",
+    "ts-node": "^10.9.1",
+    "ts-node-dev": "^2.0.0"
   }
 }

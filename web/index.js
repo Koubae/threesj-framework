@@ -4,7 +4,7 @@ import { App } from "../build/main.js";
 // Load Demos
 import {
     demo01
-} from "./demos/demos.js";
+} from "../build/examples/demos/demos.js";
 
 // import mapping
 const DEMOS = {
