@@ -1,11 +1,20 @@
 import * as THREE from 'three';
 import { OrbitControls} from "three/examples/jsm/controls/OrbitControls.js";
 
+// Core
+import World from "./world.js";
+// Components
+import GroundFlat from "../components/world/GroundFlat.js";
+
+
 type Nullable<T> = T | null; // check how to import this and have it globally defines as types / interfaces ???
 
 class LibManager {
-
+    /** @type {import * as THREE from "three";} */
     static THREE: any = THREE;
+    static components: { [key : string]: any} = {
+        GroundFlat: GroundFlat,
+    };
 
     constructor() {
         throw new Error("LibManager is not instantiable!");
@@ -15,6 +24,7 @@ class LibManager {
 
 class EventManager {
     // ----------------- < PUBLIC > ----------------- \\
+
     // ----------------- < PRIVATE > ----------------- \\
     #app: App;
     constructor(app: App) {
@@ -60,6 +70,8 @@ export default class App {
     timestampPrevious: Nullable<DOMHighResTimeStamp> = null;
     timestampDelta: Nullable<number> = null;                // deltatime from this.clock.getDelta()
     timestampDeltaWindow: Nullable<number> = null;          //  deltatime calcualted from the function window.requestAnimatedFrame
+    // Game Components
+    world: World;
 
     // DOM Events
     eventManager: EventManager;
@@ -75,6 +87,9 @@ export default class App {
 
     constructor(config: { [key: string]: any} = {}) {
         this.#config = config;
+
+        this.clock = new THREE.Clock();
+        this.eventManager = new EventManager(this);
         // create renderer
         const rendererSettings = this.#config.renderer;
         this.renderer = new THREE.WebGLRenderer({
@@ -119,7 +134,7 @@ export default class App {
         this.cameras.push(this.cameraMain);
 
         // Set up controls
-        if (this.controls) {
+        if (controls) {
             this.controls = new OrbitControls( this.cameraMain, this.renderer.domElement );
             this.controls.update();
         }
@@ -129,11 +144,13 @@ export default class App {
         this.scene = new THREE.Scene();
         if (sceneConfigs.background) {
             this.scene.background = new THREE.Color(0x000000 );
+            /*
+            scene.background = new THREE.Color().setHSL( 0.6, 0, 1 );
+				scene.fog = new THREE.Fog( scene.background, 1, 5000 );
+             */
         }
 
-        this.clock = new THREE.Clock();
-
-        this.eventManager = new EventManager(this);
+        this.world = new World(this.scene, this.#config.world);
 
 
     }

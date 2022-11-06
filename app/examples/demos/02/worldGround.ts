@@ -1,3 +1,6 @@
+import * as THREE from "three";
+import {Light} from "three/src/lights/Light";
+
 export default function demo(App: any) {
     const appSettings: {[key: string]: any} = {
         renderer: {
@@ -18,20 +21,47 @@ export default function demo(App: any) {
         },
         scene: {
             background: 0x000000,
+        },
+        world: {
+            debug: true,
         }
     };
     const app = new App(appSettings);
-    app.cameraMain.position.z = 10;
-    app.cameraMain.position.z = 10;
+    app.cameraMain.position.set(0, 2, 2);
+    app.cameraMain.lookAt(0, 0, 0);
+
+    const components = App.lib.components;
+    const ground = new components.GroundFlat(app.scene, {
+        size: new THREE.Vector2(100, 100),
+        side: THREE.DoubleSide
+    });
+
+    const plane = new THREE.Plane( new THREE.Vector3( 1, 1, 0.2 ), 3 );
+    const helper = new THREE.PlaneHelper( plane, 1, 0xffff00 );
+   // const helper = new THREE.PlaneHelper( ground.mesh, 1, 0xffff00 );
+    app.scene.add(helper);
 
 
-    const THREE = App.lib.THREE;
+    // grid
+    const size = 10;
+    const divisions = 10;
+
+    const gridHelper = new THREE.GridHelper( size, divisions );
+    app.scene.add( gridHelper );
 
 
+    const geometry = new THREE.BoxGeometry( 1, 1, 1, 4, 4, 4);
+    const material = new THREE.MeshLambertMaterial( { color: 0x00ff00, flatShading: true } );
+    const cube = new THREE.Mesh( geometry, material );
+    cube.position.y = cube.geometry.parameters.width / 2; // put the cube on top of ground (y=0)
+
+    cube.castShadow = true;
+    app.scene.add(cube);
 
     function gameLoop(timestamp:  DOMHighResTimeStamp ) {
         // @ts-ignore
         let self = this;
+
 
     }
     app.gameLoop = gameLoop;
