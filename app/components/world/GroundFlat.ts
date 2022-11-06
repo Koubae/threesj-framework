@@ -27,8 +27,13 @@ export default class GroundFlat { // todo make component interface + component c
         this.mesh.castShadow = false;
         this.mesh.receiveShadow = true;
         this.mesh.rotation.x = -Math.PI * .5; // rotate 180
-
         this.scene.add(this.mesh);
+
+        if ("helper" in settings && settings.helper) {
+            // grid
+            const gridHelper = new THREE.GridHelper( size.x, size.x );
+            this.scene.add( gridHelper );
+        }
 
     }
 

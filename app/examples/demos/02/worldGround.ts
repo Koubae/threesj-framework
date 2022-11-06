@@ -33,21 +33,10 @@ export default function demo(App: any) {
     const components = App.lib.components;
     const ground = new components.GroundFlat(app.scene, {
         size: new THREE.Vector2(100, 100),
-        side: THREE.DoubleSide
+        side: THREE.DoubleSide,
+        helper: true,
     });
 
-    const plane = new THREE.Plane( new THREE.Vector3( 1, 1, 0.2 ), 3 );
-    const helper = new THREE.PlaneHelper( plane, 1, 0xffff00 );
-   // const helper = new THREE.PlaneHelper( ground.mesh, 1, 0xffff00 );
-    app.scene.add(helper);
-
-
-    // grid
-    const size = 10;
-    const divisions = 10;
-
-    const gridHelper = new THREE.GridHelper( size, divisions );
-    app.scene.add( gridHelper );
 
 
     const geometry = new THREE.BoxGeometry( 1, 1, 1, 4, 4, 4);
