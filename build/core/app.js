@@ -12,6 +12,11 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
 var _App_instances, _App_config, _App__update;
 import * as THREE from 'three';
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+class LibManager {
+    constructor() {
+    }
+}
+LibManager.THREE = THREE;
 export default class App {
     constructor(config = {}) {
         _App_instances.add(this);
@@ -86,3 +91,7 @@ _App_config = new WeakMap(), _App_instances = new WeakSet(), _App__update = func
         __classPrivateFieldGet(this, _App_instances, "m", _App__update).call(this);
     });
 };
+// ----------------- < PUBLIC > ----------------- \\
+// library
+App.lib = LibManager;
+App.three = LibManager.THREE;

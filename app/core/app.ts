@@ -6,9 +6,23 @@ import {PCFShadowMap} from "three/src/constants";
 
 type Nullable<T> = T | null; // check how to import this and have it globally defines as types / interfaces ???
 
+class LibManager {
+
+    static THREE: any = THREE;
+
+    constructor() {
+    }
+
+
+}
+
 export default class App {
 
     // ----------------- < PUBLIC > ----------------- \\
+    // library
+    static lib: LibManager = LibManager;
+    static three: any = LibManager.THREE;
+
     // Structure
     renderer: WebGLRenderer;
     scene: THREE.Scene;
