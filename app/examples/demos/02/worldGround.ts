@@ -19,24 +19,26 @@ export default function demo(App: any) {
             // other
             controls: true,
         },
-        scene: {
-            background: 0xADD8E6FF,
-            backgroundTesting: false,
-            fogEnabled: true,
-            fogType: 1,
-            fog: {
-                type1: {
-                    color: 0xADD8E6FF,
-                    near: 0.01,
-                    far: 500
-                },
-                type2: {
-                    color: 0xADE6D5FF,
-                    density: 0.01,
-                }
-            }
+        sceneMain: {
         },
         world: {
+            scene: {
+                background: 0xADD8E6FF, // add texture
+                backgroundTesting: false,
+                fogEnabled: true,
+                fogType: 1,
+                fog: {
+                    type1: {
+                        color: 0xADD8E6FF,
+                        near: 0.01,
+                        far: 500
+                    },
+                    type2: {
+                        color: 0xADE6D5FF,
+                        density: 0.01,
+                    }
+                }
+            },
             debug: true,
             ground: {
                 size: new THREE.Vector2(1000, 1000),

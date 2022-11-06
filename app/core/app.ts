@@ -155,29 +155,7 @@ export default class App {
         }
 
         // scene
-        const sceneConfigs = this.#config.scene;
         this.scene = new THREE.Scene();
-        if (sceneConfigs.background !== null) {
-            if (sceneConfigs.backgroundTesting) {
-                this.scene.background = new THREE.Color().setHSL( 0.6, 0, 1 ); // background with different color
-            } else {
-                this.scene.background = new THREE.Color(sceneConfigs.background );
-            }
-            if (sceneConfigs.fogEnabled) {
-                if (sceneConfigs.fogType === 1) {
-                    this.scene.fog = new THREE.Fog(
-                        sceneConfigs.fog.type1.color,
-                        sceneConfigs.fog.type1.near,
-                        sceneConfigs.fog.type1.far
-                    );
-                } else if (sceneConfigs.fogType === 2) {
-                    this.scene.fog = new THREE.FogExp2(sceneConfigs.fog.type2.color, sceneConfigs.fog.type2.density);
-                }
-
-            }
-
-        }
-
         this.world = new World(this.scene, {...this.#config.world});
 
 
