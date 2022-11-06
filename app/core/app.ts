@@ -33,6 +33,9 @@ class EventManager {
         // Register Event Listeners
         window.addEventListener("resize", (event: UIEvent) => this.#_onWindowResize(event), false);
 
+        document.addEventListener('keydown', (event: KeyboardEvent) => this.#_onKeyDown(event), false);
+        document.addEventListener('keyup', (event: KeyboardEvent) => this.#_onKeyUp(event), false);
+
     }
 
     // ----------------- < EVENT METHODS > ----------------- \\
@@ -47,6 +50,14 @@ class EventManager {
         }
         this.#app.cameraMain.updateProjectionMatrix();
         this.#app.renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    #_onKeyDown(event: KeyboardEvent) {
+        console.log(event.key);
+    }
+
+    #_onKeyUp(event: KeyboardEvent) {
+
     }
 }
 
@@ -137,6 +148,8 @@ export default class App {
         // Set up controls
         if (controls) {
             this.controls = new OrbitControls( this.cameraMain, this.renderer.domElement );
+            this.controls.keyPanSpeed = 25;
+            this.controls.listenToKeyEvents( window );
             this.controls.update();
         }
 
