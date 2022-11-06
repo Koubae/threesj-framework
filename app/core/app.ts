@@ -1,8 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls} from "three/examples/jsm/controls/OrbitControls.js";
-import {WebGLRenderer} from "three/src/renderers/WebGLRenderer";
 import {Camera} from "three/src/cameras/Camera";
-import {PCFShadowMap} from "three/src/constants";
 
 type Nullable<T> = T | null; // check how to import this and have it globally defines as types / interfaces ???
 
@@ -11,8 +9,8 @@ class LibManager {
     static THREE: any = THREE;
 
     constructor() {
+        throw new Error("LibManager is not instantiable!");
     }
-
 
 }
 
@@ -21,14 +19,13 @@ export default class App {
     // ----------------- < PUBLIC > ----------------- \\
     // library
     static lib: LibManager = LibManager;
-    static three: any = LibManager.THREE;
 
     // Structure
-    renderer: WebGLRenderer;
+    renderer: THREE.WebGLRenderer;
     scene: THREE.Scene;
     clock: THREE.Clock;
-    cameraMain: Camera;
-    cameras: Camera[] = [];
+    cameraMain: THREE.Camera;
+    cameras: THREE.Camera[] = [];
     controls: Nullable<OrbitControls> = null;
 
     // Game Loop and Game Logic
