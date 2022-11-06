@@ -20,7 +20,21 @@ export default function demo(App: any) {
             controls: true,
         },
         scene: {
-            background: 0x000000,
+            background: 0xADD8E6FF,
+            backgroundTesting: false,
+            fogEnabled: true,
+            fogType: 1,
+            fog: {
+                type1: {
+                    color: 0xADD8E6FF,
+                    near: 0.01,
+                    far: 500
+                },
+                type2: {
+                    color: 0xADE6D5FF,
+                    density: 0.01,
+                }
+            }
         },
         world: {
             debug: true,
@@ -38,7 +52,7 @@ export default function demo(App: any) {
 
 
     const geometry = new THREE.BoxGeometry( 1, 1, 1, 4, 4, 4);
-    const material = new THREE.MeshLambertMaterial( { color: 0x00ff00, flatShading: true } );
+    const material = new THREE.MeshStandardMaterial( { color: 0x00ff00, flatShading: true } );
     const cube = new THREE.Mesh( geometry, material );
     cube.position.y = cube.geometry.parameters.width / 2; // put the cube on top of ground (y=0)
 
