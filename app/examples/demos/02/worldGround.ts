@@ -28,20 +28,14 @@ export default function demo(App: any) {
     const THREE = App.lib.THREE;
 
 
+
     function gameLoop(timestamp:  DOMHighResTimeStamp ) {
         // @ts-ignore
         let self = this;
 
     }
     app.gameLoop = gameLoop;
-
-
-
-
     app.run();
-
-
-
 
 
 }

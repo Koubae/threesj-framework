@@ -1,6 +1,5 @@
 import * as THREE from 'three';
 import { OrbitControls} from "three/examples/jsm/controls/OrbitControls.js";
-import {Camera} from "three/src/cameras/Camera";
 
 type Nullable<T> = T | null; // check how to import this and have it globally defines as types / interfaces ???
 
@@ -14,6 +13,33 @@ class LibManager {
 
 }
 
+class EventManager {
+    // ----------------- < PUBLIC > ----------------- \\
+    // ----------------- < PRIVATE > ----------------- \\
+    #app: App;
+    constructor(app: App) {
+        this.#app = app;
+
+        // Register Event Listeners
+        window.addEventListener("resize", (event: UIEvent) => this.#_onWindowResize(event), false);
+
+    }
+
+    // ----------------- < EVENT METHODS > ----------------- \\
+    /**
+     * Resizes the Canvas and camera aspect
+     * @param event
+     * @private
+     */
+    #_onWindowResize(event: UIEvent) {
+        if (this.#app.cameraMain instanceof THREE.PerspectiveCamera) {
+            this.#app.cameraMain.aspect = window.innerWidth / window.innerHeight;
+        }
+        this.#app.cameraMain.updateProjectionMatrix();
+        this.#app.renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+}
+
 export default class App {
 
     // ----------------- < PUBLIC > ----------------- \\
@@ -24,7 +50,7 @@ export default class App {
     renderer: THREE.WebGLRenderer;
     scene: THREE.Scene;
     clock: THREE.Clock;
-    cameraMain: THREE.Camera;
+    cameraMain: THREE.PerspectiveCamera|THREE.OrthographicCamera;
     cameras: THREE.Camera[] = [];
     controls: Nullable<OrbitControls> = null;
 
@@ -35,6 +61,8 @@ export default class App {
     timestampDelta: Nullable<number> = null;                // deltatime from this.clock.getDelta()
     timestampDeltaWindow: Nullable<number> = null;          //  deltatime calcualted from the function window.requestAnimatedFrame
 
+    // DOM Events
+    eventManager: EventManager;
     // DOM Elements
     canvas: HTMLCanvasElement;
 
@@ -104,15 +132,16 @@ export default class App {
         }
 
         this.clock = new THREE.Clock();
-        console.log(sceneConfigs.background);
+
+        this.eventManager = new EventManager(this);
 
 
     }
 
     run() {
-        window.addEventListener("DOMContentLoaded", () => {
+        window.addEventListener("load", () => {
             this.#_update();
-        });
+        }, false);
     }
 
     #_update() {
