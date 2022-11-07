@@ -3,6 +3,7 @@ import { OrbitControls} from "three/examples/jsm/controls/OrbitControls.js";
 
 // Core
 import World from "./world.js";
+import EventManager from "./eventManager.js";
 // Components
 import GroundFlat from "../components/world/GroundFlat.js";
 
@@ -22,44 +23,6 @@ class LibManager {
 
 }
 
-class EventManager {
-    // ----------------- < PUBLIC > ----------------- \\
-
-    // ----------------- < PRIVATE > ----------------- \\
-    #app: App;
-    constructor(app: App) {
-        this.#app = app;
-
-        // Register Event Listeners
-        window.addEventListener("resize", (event: UIEvent) => this.#_onWindowResize(event), false);
-
-        document.addEventListener('keydown', (event: KeyboardEvent) => this.#_onKeyDown(event), false);
-        document.addEventListener('keyup', (event: KeyboardEvent) => this.#_onKeyUp(event), false);
-
-    }
-
-    // ----------------- < EVENT METHODS > ----------------- \\
-    /**
-     * Resizes the Canvas and camera aspect
-     * @param event
-     * @private
-     */
-    #_onWindowResize(event: UIEvent) {
-        if (this.#app.cameraMain instanceof THREE.PerspectiveCamera) {
-            this.#app.cameraMain.aspect = window.innerWidth / window.innerHeight;
-        }
-        this.#app.cameraMain.updateProjectionMatrix();
-        this.#app.renderer.setSize(window.innerWidth, window.innerHeight);
-    }
-
-    #_onKeyDown(event: KeyboardEvent) {
-        console.log(event.key);
-    }
-
-    #_onKeyUp(event: KeyboardEvent) {
-
-    }
-}
 
 export default class App {
 
@@ -149,7 +112,7 @@ export default class App {
         if (controls) {
             this.controls = new OrbitControls( this.cameraMain, this.renderer.domElement );
             // TODO: Improve the pan is not soo good.
-            this.controls.keyPanSpeed = 25;
+            this.controls.keyPanSpeed = 100;
             this.controls.listenToKeyEvents( window );
             this.controls.update();
         }

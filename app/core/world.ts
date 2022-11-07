@@ -87,7 +87,7 @@ export default class World {
 
         // set up world background and fog
         const sceneConfigs = this.#settings.scene;
-        if (sceneConfigs.background !== null) {
+        if (sceneConfigs && sceneConfigs.background !== null) {
             if (sceneConfigs.backgroundTesting) {
                 this.scene.background = new THREE.Color().setHSL( 0.6, 0, 1 ); // background with different color
             } else {

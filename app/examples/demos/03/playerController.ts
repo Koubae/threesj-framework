@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import Player, {PlayerController}  from "../../../core/player.js";
 
 export default function demo(App: any) {
     const appSettings: {[key: string]: any} = {
@@ -54,15 +55,23 @@ export default function demo(App: any) {
 
     const geometry = new THREE.BoxGeometry( 1, 1, 1, 4, 4, 4);
     const material = new THREE.MeshStandardMaterial( { color: 0x00ff00, flatShading: true } );
-    const cube = new THREE.Mesh( geometry, material );
-    cube.position.y = cube.geometry.parameters.width / 2; // put the cube on top of ground (y=0)
+    const playerMesh = new THREE.Mesh( geometry, material );
+    playerMesh.position.y = playerMesh.geometry.parameters.width / 2; // put the cube on top of ground (y=0)
+    playerMesh.castShadow = true;
+    app.scene.add(playerMesh);
 
-    cube.castShadow = true;
-    app.scene.add(cube);
+    let eventManager = app.eventManager;
+    let userInput = eventManager.userInput;
+
+    // Create A player
+    const player = new Player(playerMesh, new PlayerController(userInput));
 
     function gameLoop(timestamp:  DOMHighResTimeStamp ) {
         // @ts-ignore
         let self = this;
+
+        player.update(timestamp);
+
 
 
     }
