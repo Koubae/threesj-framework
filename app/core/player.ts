@@ -139,6 +139,7 @@ export default class Player {
     // ----------------- < PUBLIC > ----------------- \\
     mesh: THREE.Mesh;
     playerController: PlayerController;
+    rotationPan: THREE.Quaternion|null = null;
 
     // ----------------- < PRIVATE > ----------------- \\
     #speed = new THREE.Vector3(1, 0.25, 25.0);
@@ -216,20 +217,31 @@ export default class Player {
         // TODO: right now, it move the player. We need to pan the camera only!
         const FIX = false;
         if (FIX) {
+            const rotationPan = mesh.quaternion.clone();
+            let pan = false;
             if (userControl.panUp) {
-                if (rotation.x < .3) {
+                if (rotation.x < .8) {
                     angle.set(1, 0, 0);
                     axis.setFromAxisAngle(angle, 4.0 * Math.PI * delta * userControl.panUp / 1000);
-                    rotation.multiply(axis);
+                    rotationPan.multiply(axis);
+                    pan = true;
                 }
+
             } else if (userControl.panDown) {
-                if (rotation.x > -.3) {
+                if (rotation.x > -.8) {
                     angle.set(1, 0, 0);
                     axis.setFromAxisAngle(angle, 4.0 * -Math.PI * delta * userControl.panDown / 1000);
-                    rotation.multiply(axis);
+                    rotationPan.multiply(axis);
+                    pan = true;
                 }
             }
+            if (pan) {
+                this.rotationPan = rotationPan;
+            } else {
+                this.rotationPan = null;
+            }
         }
+
 
         if (userControl.left) {
 
