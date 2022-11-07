@@ -9,6 +9,11 @@ export namespace Framework {
 
             keyDownCurrent: string|null
             keyDownPrevious: string|null
+
+            pointer: {
+                x: null|number,
+                y: null|number
+            }
         }
     }
 }

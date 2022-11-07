@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import App from "./app";
 import {Framework} from "./types.js";
+import {Vector2} from "three";
 
 export default class EventManager {
     // ----------------- < PUBLIC > ----------------- \\
@@ -11,6 +12,11 @@ export default class EventManager {
 
         keyUpCurrent: null,
         keyUpPrevious: null,
+
+        pointer: {
+            x: null,
+            y: null
+        }
     }
 
     // ----------------- < PRIVATE > ----------------- \\
@@ -24,6 +30,7 @@ export default class EventManager {
         document.addEventListener('keydown', (event: KeyboardEvent) => this.#_onKeyDown(event), false);
         document.addEventListener('keyup', (event: KeyboardEvent) => this.#_onKeyUp(event), false);
 
+        this.#app.canvas.addEventListener( 'pointermove', (event: PointerEvent) => this.#_onPointerMove(event), false );
     }
 
     // ----------------- < EVENT METHODS > ----------------- \\
@@ -71,5 +78,10 @@ export default class EventManager {
         if (index > -1) {
             this.userInput.allKeyPressed.splice(index, 1);
         }
+    }
+
+    #_onPointerMove( event: PointerEvent ) {
+        this.userInput.pointer.x = event.clientX;
+        this.userInput.pointer.y = event.clientY;
     }
 }

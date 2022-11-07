@@ -5,7 +5,8 @@ import { App } from "../build/main.js";
 import {
     demo01,
     demo02,
-    demo03
+    demo03,
+    demo04
 } from "../build/examples/demos/demos.js";
 
 // import mapping
@@ -13,6 +14,7 @@ const DEMOS = {
     demo01: demo01,
     demo02: demo02,
     demo03: demo03,
+    demo04: demo04,
 };
 
 // DOM Elements
@@ -33,7 +35,7 @@ function triggerLinkOnStart(linkIndex = null) {
     if (!(linkIndex in recipeLinks)) return;
     recipeLinks[linkIndex].click();
 }
-triggerLinkOnStart(2);
+triggerLinkOnStart(3);
 
 
 

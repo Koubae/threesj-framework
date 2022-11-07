@@ -5,11 +5,29 @@ import {Framework} from "./types.js";
 const USER_CONTROL_DEFAULT: any = {
     forward: false,
     backward: false,
+
     left: false,
     right: false,
+
+    turnLeft: false,
+    turnRight: false,
+
+    panUp: 0.00,
+    panDown: 0.00,
+    panLeft: 0.00,
+    panRight: 0.00,
+
     jump: false,
     sprint: false,
 };
+
+const CONTROLLER_LOGIC = {
+    turnTypes: ["left-right", "pan"],
+    turnType: "pan",
+}
+
+const PLAYER_PAN_SPEED_MAX_X: number = 250;
+const PLAYER_PAN_SPEED_MAX_Y: number = 100;
 
 export class PlayerController {
     // ----------------- < PUBLIC > ----------------- \\
@@ -26,9 +44,12 @@ export class PlayerController {
         onGround: false,
     }
 
+    windowSizeX: number = window.innerWidth;
+    windowSizeY: number = window.innerHeight;
+    windowSizeXHalf: number = this.windowSizeX / 2;
+    windowSizeYHalf: number = this.windowSizeY / 2;
+
     // ----------------- < PRIVATE > ----------------- \\
-
-
 
     constructor(userInput:  Framework.Player.userInputInterface) {
         this.userInput = userInput;
@@ -41,6 +62,33 @@ export class PlayerController {
         this.userInput.allKeyPressed.forEach(key => {
            this.keyListener(key);
         });
+        // Check mouse position
+        const POINTER_MARGINX = 250;
+        const POINTER_MARGINY = 50;
+        let pointerX = this.userInput.pointer.x;
+        let pointerY = this.userInput.pointer.y;
+
+        // Calculate X position
+        if (pointerX) {
+            if (pointerX + POINTER_MARGINX < this.windowSizeXHalf) {
+                this.userControl.panLeft = Math.abs((pointerX + POINTER_MARGINX) + -this.windowSizeXHalf);
+            } else if (pointerX - POINTER_MARGINX > this.windowSizeXHalf) {
+                this.userControl.panRight = (pointerX - POINTER_MARGINX) - this.windowSizeXHalf;
+            }
+        }
+        if (this.userControl.panLeft > PLAYER_PAN_SPEED_MAX_X) this.userControl.panLeft = PLAYER_PAN_SPEED_MAX_X;
+        if (this.userControl.panRight > PLAYER_PAN_SPEED_MAX_X) this.userControl.panRight = PLAYER_PAN_SPEED_MAX_X;
+
+        // Calculate Y Position
+        if (pointerY) {
+            if (pointerY + POINTER_MARGINY < this.windowSizeYHalf) {
+                this.userControl.panDown = Math.abs((pointerY + POINTER_MARGINY) + -this.windowSizeYHalf);
+            } else if (pointerY - POINTER_MARGINY > this.windowSizeYHalf) {
+                this.userControl.panUp = (pointerY - POINTER_MARGINY) - this.windowSizeYHalf;
+            }
+        }
+        if (this.userControl.panUp > PLAYER_PAN_SPEED_MAX_Y) this.userControl.panUp = PLAYER_PAN_SPEED_MAX_Y;
+        if (this.userControl.panDown > PLAYER_PAN_SPEED_MAX_Y) this.userControl.panDown = PLAYER_PAN_SPEED_MAX_Y;
 
     }
 
@@ -56,10 +104,14 @@ export class PlayerController {
                 this.userControl.backward = true;
                 break;
             case "a":
+                this.userControl.turnLeft = true;
+                break;
             case "arrowleft":
                 this.userControl.left = true;
                 break;
             case "d":
+                this.userControl.turnRight = true;
+                break;
             case "arrowright":
                 this.userControl.right = true;
                 break;
@@ -140,14 +192,49 @@ export default class Player {
         } else {
             velocity.z = 0;
         }
+
+        // check mouse position
+        if (userControl.panLeft) {
+            angle.set(0, 1, 0);
+            axis.setFromAxisAngle(angle, 4.0 * Math.PI * delta * userControl.panLeft / 1000);
+            rotation.multiply(axis);
+        } else if (userControl.panRight) {
+            angle.set(0, 1, 0);
+            axis.setFromAxisAngle(angle, 4.0 * -Math.PI * delta * userControl.panRight / 1000);
+            rotation.multiply(axis);
+        } else {    // avoid turn twice. player mouse position has precedence
+            if (userControl.turnLeft) {
+                angle.set(0, 1, 0);
+                axis.setFromAxisAngle(angle, 4.0 * Math.PI * delta * this.#speed.y);
+                rotation.multiply(axis);
+            } else if (userControl.turnRight) {
+                angle.set(0, 1, 0);
+                axis.setFromAxisAngle(angle, 4.0 * -Math.PI * delta * this.#speed.y);
+                rotation.multiply(axis);
+            }
+        }
+        // TODO: right now, it move the player. We need to pan the camera only!
+        const FIX = false;
+        if (FIX) {
+            if (userControl.panUp) {
+                if (rotation.x < .3) {
+                    angle.set(1, 0, 0);
+                    axis.setFromAxisAngle(angle, 4.0 * Math.PI * delta * userControl.panUp / 1000);
+                    rotation.multiply(axis);
+                }
+            } else if (userControl.panDown) {
+                if (rotation.x > -.3) {
+                    angle.set(1, 0, 0);
+                    axis.setFromAxisAngle(angle, 4.0 * -Math.PI * delta * userControl.panDown / 1000);
+                    rotation.multiply(axis);
+                }
+            }
+        }
+
         if (userControl.left) {
-            angle.set(0, 1, 0);
-            axis.setFromAxisAngle(angle, 4.0 * Math.PI * delta * this.#speed.y);
-            rotation.multiply(axis);
+
         } else if (userControl.right) {
-            angle.set(0, 1, 0);
-            axis.setFromAxisAngle(angle, 4.0 * -Math.PI * delta * this.#speed.y);
-            rotation.multiply(axis);
+
         }
 
         const jumping = state.jumping;
@@ -177,7 +264,6 @@ export default class Player {
             jumping.active = false;
             jumping.doubleJumpActive = false;
         }
-
 
         mesh.quaternion.copy(rotation);
 
