@@ -15,12 +15,15 @@ export class PlayerController {
     // ----------------- < PUBLIC > ----------------- \\
     userInput:  Framework.Player.userInputInterface;
     userControl: any = USER_CONTROL_DEFAULT;
-    state: any = { // todo: make interface
+    state: any = { // todo: make interface / or actually another class as this are common states/ability for movements
         jumping: {
             coolDown: .5, // values in seconds
             coolDownCurrent: 0,
             active: false,
+            doubleJump: true,
+            doubleJumpActive: false,
         },
+        onGround: false,
     }
 
     // ----------------- < PRIVATE > ----------------- \\
@@ -149,19 +152,30 @@ export default class Player {
 
         const jumping = state.jumping;
 
-        velocity.y += (GRAVITY * delta ) * 0.25;
+        velocity.y += (GRAVITY * delta ) * 0.20;
         if (velocity.y > PLAYER_MAX_FALL_SPEED) velocity.y = PLAYER_MAX_FALL_SPEED;
         if (userControl.jump && !jumping.active) {
             velocity.y -= PLAYER_JUMP_FORCE * delta;
             jumping.active = true;
+            state.onGround = false;
             jumping.coolDownCurrent = jumping.coolDown;
         } else {
             jumping.coolDownCurrent -= delta;
         }
 
+        if (userControl.jump && velocity.y > 0 && jumping.active && jumping.doubleJump && !jumping.doubleJumpActive) {
+            if (!state.onGround) {
+                jumping.doubleJumpActive = true;
+                velocity.y = 0;
+                velocity.y -= PLAYER_JUMP_FORCE * delta;
+            }
+
+        }
+
         if (jumping.coolDownCurrent <= 0) {
             jumping.coolDownCurrent = 0;
             jumping.active = false;
+            jumping.doubleJumpActive = false;
         }
 
 
@@ -183,6 +197,7 @@ export default class Player {
         this.mesh.position.y -= velocity.y;
         let currentY = this.mesh.position.y;
         if (currentY < groundYPos) {
+            state.onGround = true;
             this.mesh.position.y = groundYPos;
             velocity.y = 0;
         }
