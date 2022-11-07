@@ -113,8 +113,17 @@ export default class App {
             this.controls = new OrbitControls( this.cameraMain, this.renderer.domElement );
             // TODO: Improve the pan is not soo good.
             this.controls.keyPanSpeed = 100;
-            this.controls.listenToKeyEvents( window );
+            //this.controls.listenToKeyEvents( window );
             this.controls.update();
+
+            // see https://github.com/mrdoob/three.js/blob/master/examples/misc_controls_orbit.html
+            this.controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
+            this.controls.dampingFactor = 0.05;
+            this.controls.screenSpacePanning = false;
+            this.controls.minDistance = 0.1;
+            this.controls.maxDistance = 1000;
+            this.controls.maxPolarAngle = Math.PI / 2;
+
         }
 
         // scene
@@ -145,6 +154,9 @@ export default class App {
             this.timestampDelta = this.clock.getDelta();
             this.timestampDeltaWindow =  (this.timestamp - this.timestampPrevious) / 1000;
 
+            if (this.controls) {
+                this.controls.update();
+            }
 
             this.gameLoop(timestamp);
 

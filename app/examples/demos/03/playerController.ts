@@ -48,7 +48,7 @@ export default function demo(App: any) {
         }
     };
     const app = new App(appSettings);
-    app.cameraMain.position.set(0, 2, 2);
+    app.cameraMain.position.set(0, 15, 20 );
     app.cameraMain.lookAt(0, 0, 0);
 
 
@@ -69,8 +69,7 @@ export default function demo(App: any) {
     function gameLoop(timestamp:  DOMHighResTimeStamp ) {
         // @ts-ignore
         let self = this;
-
-        player.update(timestamp);
+        player.update(self.timestampDelta);
 
 
 

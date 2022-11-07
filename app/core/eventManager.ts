@@ -5,11 +5,12 @@ import {Framework} from "./types.js";
 export default class EventManager {
     // ----------------- < PUBLIC > ----------------- \\
     public userInput: Framework.Player.userInputInterface = { // TODO : Make interface and make it global
-        keyUpCurrent: null,
-        keyUpPrevious: null,
-
+        allKeyPressed: [],
         keyDownCurrent: null,
         keyDownPrevious: null,
+
+        keyUpCurrent: null,
+        keyUpPrevious: null,
     }
 
     // ----------------- < PRIVATE > ----------------- \\
@@ -40,28 +41,35 @@ export default class EventManager {
     }
 
     #_onKeyDown(event: KeyboardEvent) {
+        const key = event.key.toLowerCase();
+        if (this.userInput.keyDownCurrent && this.userInput.keyDownCurrent !== key) {
+            this.userInput.keyDownPrevious = this.userInput.keyDownCurrent;
+        }
+        this.userInput.keyDownCurrent = key;
+        if (!this.userInput.allKeyPressed.includes(key)) {
+            this.userInput.allKeyPressed.push(key);
+        }
+
+    }
+
+    #_onKeyUp(event: KeyboardEvent) {
+        const key = event.key.toLowerCase();
         if (this.userInput.keyUpCurrent) {
             this.userInput.keyUpPrevious = this.userInput.keyUpCurrent;
         }
         // remove the key-up event
-        if (this.userInput.keyDownCurrent === event.key) {
-            this.userInput.keyDownPrevious = this.userInput.keyDownCurrent;
+        if (this.userInput.keyDownCurrent === key) {
             this.userInput.keyDownCurrent = null;
         }
-
-        this.userInput.keyUpCurrent = event.key;
-    }
-
-    #_onKeyUp(event: KeyboardEvent) {
-        if (this.userInput.keyDownCurrent) {
-            this.userInput.keyDownPrevious = this.userInput.keyDownCurrent;
-        }
-        // remove the key-up event
-        if (this.userInput.keyUpCurrent === event.key) {
-            this.userInput.keyUpPrevious = this.userInput.keyUpCurrent;
-            this.userInput.keyUpCurrent = null;
+        if (this.userInput.keyDownPrevious === key) {
+            this.userInput.keyDownPrevious = null;
         }
 
-        this.userInput.keyDownCurrent = event.key;
+        this.userInput.keyUpCurrent = key;
+        // remove key
+        let index = this.userInput.allKeyPressed.indexOf(key);
+        if (index > -1) {
+            this.userInput.allKeyPressed.splice(index, 1);
+        }
     }
 }
