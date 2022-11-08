@@ -8,9 +8,9 @@ import Player, {
     PLAYER_RUN,
     PLAYER_JUMP_FORCE
 } from "../player.js";
+import {userControlState} from "../../core/types";
 
-
-const USER_CONTROL_DEFAULT: any = {
+const USER_CONTROL_DEFAULT: Framework.Player.userControlInterface = {
     forward: false,
     backward: false,
 
@@ -36,8 +36,8 @@ export default class PlayerController {
     // ----------------- < PUBLIC > ----------------- \\
     target: Player;
     userInput:  Framework.Player.userInputInterface;
-    userControl: any = USER_CONTROL_DEFAULT;
-    state: any = { // todo: make interface / or actually another class as this are common states/ability for movements
+    userControl: Framework.Player.userControlInterface = USER_CONTROL_DEFAULT;
+    state: Framework.Player.userControlState = {
         jumping: {
             coolDown: .5, // values in seconds
             coolDownCurrent: 0,

@@ -19,5 +19,34 @@ export namespace Framework {
                 y: null|number
             }
         }
+
+        interface userControlState {
+            jumping: {
+                coolDown: number
+                coolDownCurrent: number
+                active: boolean
+                doubleJump: boolean
+                doubleJumpActive: boolean
+            },
+            onGround: boolean
+        }
+
+        interface userControlInterface {
+            forward: boolean
+            backward: boolean
+            left: boolean
+            right: boolean
+
+            turnLeft: boolean
+            turnRight: boolean
+
+            panUp: number
+            panDown: number
+            panLeft: number
+            panRight: number
+
+            jump: boolean
+            sprint: boolean
+        }
     }
 }
