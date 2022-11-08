@@ -1,8 +1,15 @@
-import * as THREE from "three";
-import {Framework} from "./types.js";
-import {Vector3} from "three";
-
 // todo: add interface
+import {Framework} from "../../core/types.js";
+import * as THREE from "three";
+import {Vector3} from "three";
+import Player, {
+    GRAVITY,
+    PLAYER_MAX_FALL_SPEED,
+    PLAYER_RUN,
+    PLAYER_JUMP_FORCE
+} from "../player.js";
+
+
 const USER_CONTROL_DEFAULT: any = {
     forward: false,
     backward: false,
@@ -25,7 +32,7 @@ const USER_CONTROL_DEFAULT: any = {
 const PLAYER_PAN_SPEED_MAX_X: number = 250;
 const PLAYER_PAN_SPEED_MAX_Y: number = 100;
 
-export class PlayerController {
+export default class PlayerController {
     // ----------------- < PUBLIC > ----------------- \\
     target: Player;
     userInput:  Framework.Player.userInputInterface;
@@ -58,7 +65,7 @@ export class PlayerController {
         this.userControl = {...USER_CONTROL_DEFAULT};
         // register current inputs
         this.userInput.allKeyPressed.forEach(key => {
-           this.keyListener(key);
+            this.keyListener(key);
         });
         // Check mouse position
         const POINTER_MARGINX = 250;
@@ -326,63 +333,5 @@ export class PlayerController {
 
         velocity.add(resistance);
     }
-
-
-}
-
-const GRAVITY = 50;
-const PLAYER_MAX_SPEED: number = 10;
-const PLAYER_MAX_FALL_SPEED: number = 2.5;
-const PLAYER_RUN: number = 2.5;
-const PLAYER_JUMP_FORCE: number = 120;
-
-export default class Player {
-
-    // ----------------- < PUBLIC > ----------------- \\
-    mesh: THREE.Mesh;
-    playerController: PlayerController;
-    rotationPan: THREE.Quaternion|null = null;
-    groundCoordY: number;
-
-    // ----------------- < PRIVATE > ----------------- \\
-    #speed: THREE.Vector3 = new THREE.Vector3(10, 0.25, 25.0);
-    #speedResistance: THREE.Vector3 = new THREE.Vector3(-2, -5.0, -5.0);
-    #speedMin: THREE.Vector3 = new THREE.Vector3(-PLAYER_MAX_SPEED, -PLAYER_MAX_SPEED, -PLAYER_MAX_SPEED);
-    #speedMax: THREE.Vector3 = new THREE.Vector3(PLAYER_MAX_SPEED, PLAYER_MAX_SPEED, PLAYER_MAX_SPEED);
-    #velocity: THREE.Vector3 = new THREE.Vector3(0, 0, 0);
-
-    get speed(): THREE.Vector3 {
-        return this.#speed;
-    }
-    get speedResistance(): THREE.Vector3 {
-        return this.#speedResistance;
-    }
-    get speedMin(): THREE.Vector3 {
-        return this.#speedMin;
-    }
-    get speedMax(): THREE.Vector3 {
-        return this.#speedMax;
-    }
-    get velocity(): THREE.Vector3 {
-        return this.#velocity;
-    }
-
-
-    constructor(
-        mesh: THREE.Mesh,
-        userInput: Framework.Player.userInputInterface
-    ) {
-        this.mesh = mesh;
-        this.playerController = new PlayerController(this, userInput);
-        // Calculate the correct position of the player when it should touch the ground and place on it
-        // @ts-ignore
-        this.groundCoordY = this.mesh.geometry.parameters.width / 2;
-        this.mesh.position.y = this.groundCoordY; // put the cube on top of ground (y=0)
-    }
-
-    update(delta: DOMHighResTimeStamp) {
-        this.playerController.updatePosition(delta);
-    }
-
 
 }

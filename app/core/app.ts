@@ -11,7 +11,7 @@ import Nullable = Types.Nullable;
 // Objects
 import ThirdPersonCamera from "../objects/cameras/thirdPersonCamera.js";
 // Components
-import Player from "./player";
+import Player from "../entities/player.js";
 
 
 export default class App {

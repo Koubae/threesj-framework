@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import Player, {PlayerController}  from "../../../core/player.js";
+import Player from "../../../entities/player.js";
 
 export default function demo(App: any) {
     const appSettings: {[key: string]: any} = {

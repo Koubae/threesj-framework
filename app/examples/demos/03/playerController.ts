@@ -1,5 +1,7 @@
 import * as THREE from "three";
-import Player, {PlayerController}  from "../../../core/player.js";
+
+import PlayerController from "../../../entities/controller/playerController.js";
+import Player from "../../../entities/player.js";
 
 export default function demo(App: any) {
     const appSettings: {[key: string]: any} = {
@@ -64,7 +66,7 @@ export default function demo(App: any) {
     let userInput = eventManager.userInput;
 
     // Create A player
-    const player = new Player(playerMesh, new PlayerController(userInput));
+    const player = new Player(playerMesh, userInput);
 
     function gameLoop(timestamp:  DOMHighResTimeStamp ) {
         // @ts-ignore

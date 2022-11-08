@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import Player from "../../core/player.js";
+import Player from "../../entities/player.js";
 
 // x: determines the look from the player left/right shoulder (or right in center if set to 0)
 // y: depends how tall is the player
