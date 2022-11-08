@@ -1,7 +1,6 @@
 import * as THREE from "three";
 import App from "./app";
 import {Framework} from "./types.js";
-import {Vector2} from "three";
 
 export default class EventManager {
     // ----------------- < PUBLIC > ----------------- \\
@@ -47,6 +46,11 @@ export default class EventManager {
         this.#app.renderer.setSize(window.innerWidth, window.innerHeight);
     }
 
+    /**
+     * Registers KeyDown Events
+     * @param event
+     * @private
+     */
     #_onKeyDown(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
         if (this.userInput.keyDownCurrent && this.userInput.keyDownCurrent !== key) {
@@ -59,6 +63,11 @@ export default class EventManager {
 
     }
 
+    /**
+     * Registers KeyUp events
+     * @param event
+     * @private
+     */
     #_onKeyUp(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
         if (this.userInput.keyUpCurrent) {
@@ -80,6 +89,11 @@ export default class EventManager {
         }
     }
 
+    /**
+     * Registers pointermove events
+     * @param event
+     * @private
+     */
     #_onPointerMove( event: PointerEvent ) {
         this.userInput.pointer.x = event.clientX;
         this.userInput.pointer.y = event.clientY;

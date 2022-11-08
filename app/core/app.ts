@@ -2,76 +2,16 @@ import * as THREE from 'three';
 import { OrbitControls} from "three/examples/jsm/controls/OrbitControls.js";
 
 // Core
+import LibManager from "./libManager.js";
 import World from "./world.js";
 import EventManager from "./eventManager.js";
+import {Framework} from "./types.js";
+import Types = Framework.Types;
+import Nullable = Types.Nullable;
+// Objects
+import ThirdPersonCamera from "../objects/cameras/thirdPersonCamera.js";
 // Components
-import GroundFlat from "../components/world/GroundFlat.js";
 import Player from "./player";
-
-
-type Nullable<T> = T | null; // check how to import this and have it globally defines as types / interfaces ???
-
-class LibManager {
-    /** @type {import * as THREE from "three";} */
-    static THREE: any = THREE;
-    static components: { [key : string]: any} = {
-        GroundFlat: GroundFlat,
-    };
-
-    constructor() {
-        throw new Error("LibManager is not instantiable!");
-    }
-
-}
-
-// x: determines the look from the player left/right shoulder (or right in center if set to 0)
-// y: depends how tall is the player
-// z: how far away from the player
-const CAMERA_OFFSET = new THREE.Vector3(0, 5, -10);
-const CAMERA_LOOKAT = new THREE.Vector3(0, 0, 50);
-
-class ThirdPersonCamera {
-    // ----------------- < PUBLIC > ----------------- \\
-    camera: THREE.PerspectiveCamera|THREE.OrthographicCamera;
-    target: Player
-    // ----------------- < PRIVATE > ----------------- \\
-    #_currentPosition: THREE.Vector3;
-    #_currentLookAt: THREE.Vector3;
-
-    constructor(camera: THREE.PerspectiveCamera|THREE.OrthographicCamera, target: Player) {
-        this.camera = camera;
-        this.target = target;
-
-        this.#_currentPosition = new THREE.Vector3();
-        this.#_currentLookAt = new THREE.Vector3();
-    }
-
-    #_calculateOffset() {
-        const coords = CAMERA_OFFSET.clone();
-        coords.applyQuaternion(this.target.mesh.quaternion);
-        coords.add(this.target.mesh.position);
-        return coords;
-    }
-
-    #_calculateLookAt() {
-        const coords = CAMERA_LOOKAT.clone();
-        coords.applyQuaternion(this.target.mesh.quaternion);
-        coords.add(this.target.mesh.position);
-        return coords;
-    }
-
-    update(delta: DOMHighResTimeStamp) {
-        const offset = this.#_calculateOffset();
-        const lookAt = this.#_calculateLookAt();
-
-        const t = 1.0 - Math.pow(0.001, delta);
-
-        this.#_currentPosition.lerp(offset, t);
-        this.#_currentLookAt.lerp(lookAt, t);
-        this.camera.position.copy(this.#_currentPosition);
-        this.camera.lookAt(this.#_currentLookAt);
-    }
-}
 
 
 export default class App {
@@ -227,6 +167,7 @@ export default class App {
         this.scene.add(player.mesh);
         switch (cameraType) {
             case "firstPerson":
+                // TODO: Add first person camera
                 break;
             case "thirdPerson":
                 this.cameraPlayer = new ThirdPersonCamera(this.cameraMain, player);

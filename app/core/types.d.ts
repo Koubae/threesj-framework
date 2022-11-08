@@ -1,5 +1,9 @@
 export namespace Framework {
 
+    export namespace Types {
+        type Nullable<T> = T | null;
+    }
+
     // Player Types
     export namespace Player {
         interface userInputInterface {

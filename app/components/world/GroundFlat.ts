@@ -1,8 +1,5 @@
 import * as THREE from 'three';
-import {Mesh, MeshStandardMaterial, Scene, Vector2} from "three";
-import {ParametricGeometries} from "three/examples/jsm/geometries/ParametricGeometries";
-import PlaneGeometry = ParametricGeometries.PlaneGeometry;
-
+import {Mesh, Scene} from "three";
 
 
 export default class GroundFlat { // todo make component interface + component class
@@ -29,6 +26,7 @@ export default class GroundFlat { // todo make component interface + component c
         this.mesh.rotation.x = -Math.PI * .5; // rotate 180
         this.scene.add(this.mesh);
 
+        // If helper is set, it creates a ground grid
         if ("helper" in  settings && settings.helper) {
             // grid
             const gridHelper = new THREE.GridHelper( size.x, size.x );
