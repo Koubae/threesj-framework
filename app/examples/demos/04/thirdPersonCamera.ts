@@ -58,9 +58,8 @@ export default function demo(App: any) {
     const geometry = new THREE.BoxGeometry( 1, 1, 1, 4, 4, 4);
     const material = new THREE.MeshStandardMaterial( { color: 0x00ff00, flatShading: true } );
     const playerMesh = new THREE.Mesh( geometry, material );
-    playerMesh.position.y = playerMesh.geometry.parameters.width / 2; // put the cube on top of ground (y=0)
     playerMesh.castShadow = true;
-    const player = new Player(playerMesh, new PlayerController(userInput));
+    const player = new Player(playerMesh, userInput);
     app.addPlayer(player, "thirdPerson");
 
     function gameLoop(timestamp:  DOMHighResTimeStamp ) {
