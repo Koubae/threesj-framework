@@ -8,7 +8,6 @@ import Player, {
     PLAYER_RUN,
     PLAYER_JUMP_FORCE
 } from "../player.js";
-import {userControlState} from "../../core/types";
 
 const USER_CONTROL_DEFAULT: Framework.Player.userControlInterface = {
     forward: false,
@@ -74,7 +73,7 @@ export default class PlayerController {
         let pointerY = this.userInput.pointer.y;
 
         // Calculate X position
-        if (pointerX) {
+        if (pointerX) {w
             if (pointerX + POINTER_MARGINX < this.windowSizeXHalf) {
                 this.userControl.panLeft = Math.abs((pointerX + POINTER_MARGINX) + -this.windowSizeXHalf);
             } else if (pointerX - POINTER_MARGINX > this.windowSizeXHalf) {
