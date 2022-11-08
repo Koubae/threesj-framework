@@ -1,6 +1,6 @@
 import * as THREE from "three";
-
 import Player from "../../../entities/player.js";
+import Entity from "../../../entities/entity.js";
 
 export default function demo(App: any) {
     const appSettings: {[key: string]: any} = {
@@ -18,7 +18,7 @@ export default function demo(App: any) {
             far: 1000,
 
             // other
-            controls: true,
+            controls: false,
         },
         sceneMain: {
         },
@@ -52,26 +52,31 @@ export default function demo(App: any) {
     app.cameraMain.position.set(0, 15, 20 );
     app.cameraMain.lookAt(0, 0, 0);
 
-
-
-    const geometry = new THREE.BoxGeometry( 1, 1, 1, 4, 4, 4);
-    const material = new THREE.MeshStandardMaterial( { color: 0x00ff00, flatShading: true } );
-    const playerMesh = new THREE.Mesh( geometry, material );
-    playerMesh.position.y = playerMesh.geometry.parameters.width / 2; // put the cube on top of ground (y=0)
-    playerMesh.castShadow = true;
-    app.scene.add(playerMesh);
-
     let eventManager = app.eventManager;
     let userInput = eventManager.userInput;
 
     // Create A player
+    const geometry = new THREE.BoxGeometry( 1, 1, 1, 4, 4, 4);
+    const material = new THREE.MeshStandardMaterial( { color: 0x00ff00, flatShading: true } );
+    const playerMesh = new THREE.Mesh( geometry, material );
+
     const player = new Player(playerMesh, userInput);
+    app.addPlayer(player, "thirdPerson");
+
+    // Create entity
+    const materialEntity = new THREE.MeshStandardMaterial( { color: 0xff0000, flatShading: true } );
+    const entityMesh = new THREE.Mesh( geometry, materialEntity );
+    const entity = new Entity(entityMesh, userInput);
+    entity.mesh.position.x = 5;
+    entity.mesh.position.z = 5;
+    app.addEntity(entity);
+
+
 
     function gameLoop(timestamp:  DOMHighResTimeStamp ) {
         // @ts-ignore
         let self = this;
         player.update(self.timestampDelta);
-
 
 
     }

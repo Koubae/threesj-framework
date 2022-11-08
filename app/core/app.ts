@@ -12,6 +12,7 @@ import Nullable = Types.Nullable;
 import ThirdPersonCamera from "../objects/cameras/thirdPersonCamera.js";
 // Components
 import Player from "../entities/player.js";
+import Entity from "../entities/entity.js";
 
 
 export default class App {
@@ -38,6 +39,7 @@ export default class App {
     // Game Components
     world: World;
     player: Nullable<Player>;
+    entities: THREE.Group;
 
     // DOM Events
     domLoaded: boolean = document.readyState === "complete"; // loaded or interactive when is not loaded or ready!
@@ -120,6 +122,8 @@ export default class App {
         this.world = new World(this.scene, {...this.#config.world});
         this.clock = new THREE.Clock();
         this.eventManager = new EventManager(this);
+        this.entities = new THREE.Group();
+        this.scene.add(this.entities);
 
     }
 
@@ -176,6 +180,10 @@ export default class App {
                 break;
         }
 
+    }
+
+    addEntity(entity: Entity) {
+        this.entities.add(entity.mesh);
     }
 
 

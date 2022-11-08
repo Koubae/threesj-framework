@@ -1,65 +1,20 @@
 // todo: add interface
 import {Framework} from "../../core/types.js";
 import * as THREE from "three";
-import {Vector3} from "three";
-import Player, {
-    GRAVITY,
-    PLAYER_MAX_FALL_SPEED,
-    PLAYER_RUN,
-    PLAYER_JUMP_FORCE
-} from "../player.js";
+import EntityInterface = Framework.Entity.EntityInterface;
+import EntityController,  { USER_CONTROL_DEFAULT } from "./entityController.js";
 
-const USER_CONTROL_DEFAULT: Framework.Player.userControlInterface = {
-    forward: false,
-    backward: false,
-
-    left: false,
-    right: false,
-
-    turnLeft: false,
-    turnRight: false,
-
-    panUp: 0.00,
-    panDown: 0.00,
-    panLeft: 0.00,
-    panRight: 0.00,
-
-    jump: false,
-    sprint: false,
-};
 
 const PLAYER_PAN_SPEED_MAX_X: number = 250;
 const PLAYER_PAN_SPEED_MAX_Y: number = 100;
-
-export default class PlayerController {
+export default class PlayerController extends EntityController {
     // ----------------- < PUBLIC > ----------------- \\
-    target: Player;
-    userInput:  Framework.Player.userInputInterface;
-    userControl: Framework.Player.userControlInterface = USER_CONTROL_DEFAULT;
-    state: Framework.Player.userControlState = {
-        jumping: {
-            coolDown: .5, // values in seconds
-            coolDownCurrent: 0,
-            active: false,
-            doubleJump: true,
-            doubleJumpActive: false,
-        },
-        onGround: false,
-    }
-
-    windowSizeX: number = window.innerWidth;
-    windowSizeY: number = window.innerHeight;
-    windowSizeXHalf: number = this.windowSizeX / 2;
-    windowSizeYHalf: number = this.windowSizeY / 2;
-
     // ----------------- < PRIVATE > ----------------- \\
-
-    constructor(target: Player, userInput:  Framework.Player.userInputInterface) {
-        this.target = target;
-        this.userInput = userInput;
+    constructor(target: EntityInterface, userInput:  Framework.Entity.userInputInterface) {
+        super(target, userInput);
     }
 
-    #registerInput() {
+    protected calculateNextPosition() {
         // create a new userControl Object
         this.userControl = {...USER_CONTROL_DEFAULT};
         // register current inputs
@@ -134,15 +89,18 @@ export default class PlayerController {
     // --------------------------
     // Controller Movements and abilities
     // --------------------------
-
+    /**
+     * @override
+     * @param delta
+     */
     updatePosition(delta: DOMHighResTimeStamp) {
-        this.#registerInput();
+        this.calculateNextPosition();
         const target = this.target;
         const userControl = this.userControl;
 
         const speed = target.speed.clone();
         const velocity = target.velocity;
-        this.#_velocityApplyResistance(velocity, delta);
+        this._velocityApplyResistance(velocity, delta);
 
         const state = this.state;
         const mesh = target.mesh;
@@ -150,28 +108,27 @@ export default class PlayerController {
         const angle = new THREE.Vector3();
         const rotation = mesh.quaternion.clone();
 
-        this.#_sprint(speed);
-        this.#_jump(velocity, delta);
+        this._sprint(speed);
+        this._jump(velocity, delta);
 
         if (userControl.forward) {
-            this.#_forward(velocity, speed, delta);
+            this._forward(velocity, speed, delta);
         } else if (userControl.backward) {
-            this.#_backward(velocity, speed, delta);
+            this._backward(velocity, speed, delta);
         } else {
             velocity.z = 0;
         }
         if (userControl.left) {
-            this.#_left(velocity, speed, delta);
+            this._left(velocity, speed, delta);
         } else if (userControl.right) {
-            this.#_right(velocity, speed, delta);
+            this._right(velocity, speed, delta);
         } else {
             velocity.x = 0;
         }
 
-        this.#panPlayerHorizontally(userControl, angle, delta, axis, rotation, target.speed);
+        this.panPlayerHorizontally(userControl, angle, delta, axis, rotation, target.speed);
         // TODO: right now, it move the player. We need to pan the camera only!
         this.#panPlayerVertically(mesh, userControl, rotation, delta, axis, angle);
-
         mesh.quaternion.copy(rotation);
 
         const forward = new THREE.Vector3(0, 0, 1);
@@ -200,80 +157,6 @@ export default class PlayerController {
         sideways.clamp(target.speedMin, target.speedMax);
         target.mesh.position.add(forward);
         target.mesh.position.add(sideways);
-    }
-
-    // Movements
-    #_forward(velocity: THREE.Vector3, speed: THREE.Vector3, delta: DOMHighResTimeStamp): void {
-        velocity.z += speed.z * delta;
-    }
-    #_backward(velocity: THREE.Vector3, speed: THREE.Vector3, delta: DOMHighResTimeStamp): void {
-        velocity.z -= speed.z * delta;
-    }
-    #_left(velocity: THREE.Vector3, speed: THREE.Vector3, delta: DOMHighResTimeStamp): void {
-        velocity.x += speed.x * delta;
-    }
-    #_right(velocity: THREE.Vector3, speed: THREE.Vector3, delta: DOMHighResTimeStamp): void {
-        velocity.x -= speed.x * delta;
-    }
-    // Special Abilities
-    #_jump(velocity: THREE.Vector3, delta: DOMHighResTimeStamp): void {
-        const jumping = this.state.jumping;
-        velocity.y += (GRAVITY * delta ) * 0.20;
-        if (velocity.y > PLAYER_MAX_FALL_SPEED) velocity.y = PLAYER_MAX_FALL_SPEED;
-        if (this.userControl.jump && !jumping.active) {
-            velocity.y -= PLAYER_JUMP_FORCE * delta;
-            jumping.active = true;
-            this.state.onGround = false;
-            jumping.coolDownCurrent = jumping.coolDown;
-        } else {
-            jumping.coolDownCurrent -= delta;
-        }
-
-        if (this.userControl.jump && velocity.y > 0 && jumping.active && jumping.doubleJump && !jumping.doubleJumpActive) {
-            if (!this.state.onGround) {
-                jumping.doubleJumpActive = true;
-                velocity.y = 0;
-                velocity.y -= PLAYER_JUMP_FORCE * delta;
-            }
-        }
-
-        if (jumping.coolDownCurrent <= 0) {
-            jumping.coolDownCurrent = 0;
-            jumping.active = false;
-            jumping.doubleJumpActive = false;
-        }
-    }
-
-    #_sprint(speed: THREE.Vector3): void {
-        if (this.userControl.sprint) {
-            speed.multiplyScalar(PLAYER_RUN);
-        }
-    }
-
-
-    // TODO: fixme this is currently garbage
-    #panPlayerHorizontally(userControl: any, angle: any, delta: any, axis: any, rotation: any, speed: Vector3) {
-        // check mouse position
-        if (userControl.panLeft) {
-            angle.set(0, 1, 0);
-            axis.setFromAxisAngle(angle, 4.0 * Math.PI * delta * userControl.panLeft / 1000);
-            rotation.multiply(axis);
-        } else if (userControl.panRight) {
-            angle.set(0, 1, 0);
-            axis.setFromAxisAngle(angle, 4.0 * -Math.PI * delta * userControl.panRight / 1000);
-            rotation.multiply(axis);
-        } else {    // avoid turn twice. player mouse position has precedence
-            if (userControl.turnLeft) {
-                angle.set(0, 1, 0);
-                axis.setFromAxisAngle(angle, 4.0 * Math.PI * delta * speed.y);
-                rotation.multiply(axis);
-            } else if (userControl.turnRight) {
-                angle.set(0, 1, 0);
-                axis.setFromAxisAngle(angle, 4.0 * -Math.PI * delta * speed.y);
-                rotation.multiply(axis);
-            }
-        }
-
     }
 
     // TODO: right now, it move the player. We need to pan the camera only!
@@ -305,32 +188,6 @@ export default class PlayerController {
                 this.target.rotationPan = null;
             }
         }
-    }
-
-    /**
-     * Adds Resistance to a velocity, basically reducing the speed by friction
-     * @param velocity
-     * @param delta
-     * @private
-     */
-    #_velocityApplyResistance(velocity: THREE.Vector3, delta: DOMHighResTimeStamp): void  {
-        const resistance = new THREE.Vector3(
-            velocity.x * this.target.speedResistance.x,
-            velocity.y * this.target.speedResistance.y,
-            velocity.z * this.target.speedResistance.z
-        );
-
-        resistance.multiplyScalar(delta);
-        resistance.z = Math.sign(resistance.z) * Math.min(
-            Math.abs(resistance.z), Math.abs(velocity.z));
-
-        resistance.x = Math.sign(resistance.x) * Math.min(
-            Math.abs(resistance.x), Math.abs(velocity.x));
-
-        resistance.y = Math.sign(resistance.y) * Math.min(
-            Math.abs(resistance.y), Math.abs(velocity.y));
-
-        velocity.add(resistance);
     }
 
 }

@@ -4,7 +4,7 @@ import {Framework} from "./types.js";
 
 export default class EventManager {
     // ----------------- < PUBLIC > ----------------- \\
-    public userInput: Framework.Player.userInputInterface = { // TODO : Make interface and make it global
+    public userInput: Framework.Entity.userInputInterface = { // TODO : Make interface and make it global
         allKeyPressed: [],
         keyDownCurrent: null,
         keyDownPrevious: null,
