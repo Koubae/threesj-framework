@@ -65,13 +65,20 @@ export default function demo(App: any) {
 
     // Create entity
     const materialEntity = new THREE.MeshStandardMaterial( { color: 0xff0000, flatShading: true } );
-    const entityMesh = new THREE.Mesh( geometry, materialEntity );
-    const entity = new Entity(entityMesh, userInput);
-    entity.mesh.position.x = 5;
-    entity.mesh.position.z = 5;
-    app.addEntity(entity);
 
+    let entityCount = 6;
+    for (let i = 0; i < entityCount; i++) {
+        const entityMesh = new THREE.Mesh( geometry, materialEntity );
+        const entity = new Entity(entityMesh, userInput);
+        //entity.mesh.position.x = (i + .5) * 5;
 
+        entity.mesh.rotation.y += Math.cos(i + .5) * 2;
+        entity.mesh.position.x = Math.cos((i + .5)) * 5;
+        entity.mesh.position.z = Math.sin((i + .5)) * 5;
+
+        //entity.mesh.position.z = (i + 5) * 5;
+        app.addEntity(entity);
+    }
 
     function gameLoop(timestamp:  DOMHighResTimeStamp ) {
         // @ts-ignore
