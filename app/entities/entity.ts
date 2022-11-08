@@ -64,7 +64,7 @@ export default class Entity implements EntityInterface {
     }
 
     update(delta: DOMHighResTimeStamp) {
-       // this.controller.updatePosition(delta);
+       this.controller.updatePosition(delta);
     }
 
 

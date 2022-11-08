@@ -10,6 +10,12 @@ import {
 import EntityInterface = Framework.Entity.EntityInterface;
 
 
+
+
+function randomIntFromInterval(min: number, max: number): number { // min and max included
+    return Math.floor(Math.random() * (max - min + 1) + min)
+}
+
 interface EntityControllerInterface {
     target: EntityInterface
     userInput:  Framework.Entity.userInputInterface
@@ -48,6 +54,25 @@ export const USER_CONTROL_DEFAULT: Framework.Entity.userControlInterface = {
     jump: false,
     sprint: false,
 };
+// TODO: this is a very bad implementation is just for testing
+const USER_CONTROL_WEIGHTS: any = {
+    forward: 1,
+    backward: 200,
+
+    left: 1,
+    right: 1,
+
+    turnLeft: 300,
+    turnRight: 300,
+
+    panUp: null,
+    panDown: null,
+    panLeft: 50,
+    panRight: 50,
+
+    jump: 200,
+    sprint: 5
+};
 
 export default class EntityController implements EntityControllerInterface {
     // ----------------- < PUBLIC > ----------------- \\
@@ -68,7 +93,8 @@ export default class EntityController implements EntityControllerInterface {
             this.userInput = userInput;
         }
 
-        this.userControl = USER_CONTROL_DEFAULT;
+        // create a new userControl Object
+        this.userControl = {...USER_CONTROL_DEFAULT};
         this.state = {
             jumping: {
                 coolDown: .5, // values in seconds
@@ -89,7 +115,25 @@ export default class EntityController implements EntityControllerInterface {
     // --------------------------
     // Controller Movements and abilities
     // --------------------------
-    protected calculateNextPosition() {
+    calculateNextPosition() {
+        // create a new userControl Object
+        this.userControl = {...USER_CONTROL_DEFAULT};
+
+        for(const [key, value] of Object.entries(this.userControl)) {
+            let weight = USER_CONTROL_WEIGHTS[key];
+            let enableControl = randomIntFromInterval(0, weight);
+            if (enableControl !== 0) {
+                continue;
+            }
+            if (typeof value === "number") {
+                // @ts-ignore
+                this.userControl[key] = randomIntFromInterval(10 , 250);
+            } else if (typeof value === "boolean") {
+                // @ts-ignore
+                this.userControl[key] = true;
+
+            }
+        }
 
     }
 

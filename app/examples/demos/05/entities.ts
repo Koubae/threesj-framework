@@ -66,6 +66,7 @@ export default function demo(App: any) {
     // Create entity
     const materialEntity = new THREE.MeshStandardMaterial( { color: 0xff0000, flatShading: true } );
 
+    let entities: Entity[] = [];
     let entityCount = 6;
     for (let i = 0; i < entityCount; i++) {
         const entityMesh = new THREE.Mesh( geometry, materialEntity );
@@ -78,6 +79,7 @@ export default function demo(App: any) {
 
         //entity.mesh.position.z = (i + 5) * 5;
         app.addEntity(entity);
+        entities.push(entity);
     }
 
     function gameLoop(timestamp:  DOMHighResTimeStamp ) {
@@ -85,6 +87,9 @@ export default function demo(App: any) {
         let self = this;
         player.update(self.timestampDelta);
 
+        entities.forEach((entity: any) => {
+           entity.update(self.timestampDelta);
+        });
 
     }
     app.gameLoop = gameLoop;

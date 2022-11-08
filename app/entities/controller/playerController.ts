@@ -14,7 +14,7 @@ export default class PlayerController extends EntityController {
         super(target, userInput);
     }
 
-    protected calculateNextPosition() {
+    calculateNextPosition() {
         // create a new userControl Object
         this.userControl = {...USER_CONTROL_DEFAULT};
         // register current inputs
