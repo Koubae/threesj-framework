@@ -22,6 +22,7 @@ import {
 
 import {
     demoPhysics01,
+    demoPhysics02,
 } from "./app/examples/physics/demos.ts";
 
 // import mapping
@@ -38,8 +39,9 @@ const DEMOS = {
     demoTerrain04: demoTerrain04,
 
     demoPhysics01: demoPhysics01,
+    demoPhysics02: demoPhysics02,
 };
-const DEFAULT_DEMO_INDEX = 9;
+const DEFAULT_DEMO_INDEX = 10;
 
 
 
