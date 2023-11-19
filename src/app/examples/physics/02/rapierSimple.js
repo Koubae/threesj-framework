@@ -41,15 +41,6 @@ export default function demo() {
         cube.position.y = 1;
         scene.add(cube);
 
-        const sphere = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 16), new THREE.MeshStandardMaterial({color: 0xffff00}));
-        sphere.receiveShadow = true;
-        sphere.castShadow = true;
-        sphere.position.y = 100;
-        sphere.position.x = 5;
-        sphere.userData.physics = {mass: 1};
-        scene.add(sphere);
-
-
         const stats = new Stats();
         document.body.appendChild(stats.dom);
 
@@ -71,21 +62,20 @@ export default function demo() {
         let groundColliderDesc = RAPIER.ColliderDesc.cuboid(10.0, 0.1, 10.0);
         world.createCollider(groundColliderDesc);
 
-        // Create a dynamic rigid-body.
-        let rigidBodyDesc = RAPIER.RigidBodyDesc.dynamic().setTranslation(0.0, 1.0, 0.0);
-        let rigidBody = world.createRigidBody(rigidBodyDesc);
-
-        // Create a cuboid collider attached to the dynamic rigidBody.
-        let colliderDesc = RAPIER.ColliderDesc.cuboid(0.5, 0.5, 0.5);
-        // let collider = world.createCollider(colliderDesc, rigidBody);
-
-
         // Add sphere
+        const sphere = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 16), new THREE.MeshStandardMaterial({color: 0xffff00}));
+        sphere.receiveShadow = true;
+        sphere.castShadow = true;
+        sphere.position.y = 10;
+        sphere.position.x = 5;
+        sphere.userData.physics = {mass: 1};
+        scene.add(sphere);
         const sphereGeometry = sphere.geometry;
         const parameters = sphereGeometry.parameters;
         const radius = parameters.radius !== undefined ? parameters.radius : 1;
         const collider = RAPIER.ColliderDesc.ball(radius);
 
+        // add physics to sphere
         const mass = 1;
         collider.setMass(mass);
         // collider.setRestitution(undefined);
