@@ -1,3 +1,4 @@
+// @ts-ignore
 import * as THREE from 'three';
 import {AmbientLight, DirectionalLight, HemisphereLight, Scene} from "three";
 import GroundFlat from "../components/world/GroundFlat.js";
@@ -19,6 +20,7 @@ export default class World {
     // ----------------- < PUBLIC > ----------------- \\
     public scene: Scene;
     public lights: THREE.Light[] = [];
+    // @ts-ignore
     public ground: GroundFlat;
     public debug: boolean = false;
     // ----------------- < PRIVATE > ----------------- \\

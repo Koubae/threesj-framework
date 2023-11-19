@@ -16,6 +16,7 @@ import {
 import {
     demoTerrain01,
     demoTerrain02,
+    demoTerrain03,
 } from "./app/examples/terrain/demos.js";
 
 // import mapping
@@ -28,8 +29,9 @@ const DEMOS = {
 
     demoTerrain01: demoTerrain01,
     demoTerrain02: demoTerrain02,
+    demoTerrain03: demoTerrain03,
 };
-const DEFAULT_DEMO_INDEX = 6;
+const DEFAULT_DEMO_INDEX = 7;
 
 
 

@@ -5,7 +5,7 @@
  */
 
 import * as THREE from 'three';
-import Stats from 'three/addons/libs/stats.module.js';
+import Stats from 'three/examples/jsm/libs/stats.module.js';
 
 import {FirstPersonControls} from 'three/examples/jsm/controls/FirstPersonControls.js';
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js';
