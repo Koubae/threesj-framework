@@ -28,3 +28,9 @@ Frameworks & Libraries
 
 * [simplex-noise](https://www.npmjs.com/package/simplex-noise)
 * [THREE.Terrain](https://github.com/IceCreamYou/THREE.Terrain)
+
+
+Projects, Demo & Repos
+----------------------
+
+* [viridia/demo-rapier-three](https://github.com/viridia/demo-rapier-three)

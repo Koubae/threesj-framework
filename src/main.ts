@@ -39,7 +39,7 @@ const DEMOS = {
 
     demoPhysics01: demoPhysics01,
 };
-const DEFAULT_DEMO_INDEX = null;
+const DEFAULT_DEMO_INDEX = 9;
 
 
 

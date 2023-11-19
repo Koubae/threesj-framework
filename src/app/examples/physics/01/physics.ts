@@ -1,5 +1,8 @@
+// @ts-nocheck
 // @ref: node_modules/three/examples/jsm/physics/RapierPhysics.js
 import { Clock, Vector3, Quaternion, Matrix4 } from 'three';
+import {getRapier} from "./getRapier.ts";
+
 
 const RAPIER_PATH = 'https://cdn.skypack.dev/@dimforge/rapier3d-compat@0.11.2';
 
@@ -36,13 +39,13 @@ function getCollider( geometry ) {
 }
 
 async function RapierPhysics() {
-
-	if ( Physics === null ) {
-
-		Physics = await import( RAPIER_PATH );
-		await Physics.init();
-
-	}
+	Physics = await getRapier();
+	// if ( Physics === null ) {
+	//
+	// 	Physics = await import( RAPIER_PATH );
+	// 	await Physics.init();
+	//
+	// }
 
 	// Docs: https://rapier.rs/docs/api/javascript/JavaScript3D/
 
