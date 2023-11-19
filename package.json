@@ -1,0 +1,28 @@
+{
+  "name": "threejs-framework",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "dev-server": "node server.js",
+    "tscCompileDev": "tsc --watch",
+    "tscCompileDevFiles": "tsc *.ts --watch"
+  },
+  "dependencies": {
+    "alea": "^1.0.1",
+    "simplex-noise": "^4.0.1",
+    "three": "^0.158.0",
+    "three.terrain.js": "^2.0.0"
+  },
+  "devDependencies": {
+    "@types/three": "^0.158.2",
+    "nodemon": "^2.0.20",
+    "ts-node": "^10.9.1",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.2.2",
+    "vite": "^5.0.0"
+  }
+}
