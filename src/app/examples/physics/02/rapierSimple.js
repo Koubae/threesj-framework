@@ -50,7 +50,11 @@ export default function demo() {
 
 
         const controls = new OrbitControls(camera, renderer.domElement);
-        controls.target.y = 0.5;
+        controls.listenToKeyEvents(renderer.domElement);
+        controls.enableDamping = true
+        controls.enablePan = true
+        controls.maxPolarAngle = Math.PI / 2 - 0.05 // prevent camera below ground
+        controls.minPolarAngle = Math.PI / 4        // prevent top down view
         controls.update();
 
         // Physics
@@ -66,8 +70,6 @@ export default function demo() {
         const sphere = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 16), new THREE.MeshStandardMaterial({color: 0xffff00}));
         sphere.receiveShadow = true;
         sphere.castShadow = true;
-        sphere.position.y = 10;
-        sphere.position.x = 5;
         sphere.userData.physics = {mass: 1};
         scene.add(sphere);
         const sphereGeometry = sphere.geometry;
@@ -80,7 +82,7 @@ export default function demo() {
         collider.setMass(mass);
         // collider.setRestitution(undefined);
         const desc = RAPIER.RigidBodyDesc.dynamic();
-        desc.setTranslation( ...sphere.position );
+        desc.setTranslation( 10,  10,  1.0, );
         desc.setRotation( sphere.quaternion );
         const body = world.createRigidBody( desc );
         world.createCollider( collider, body );

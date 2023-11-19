@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * @credits:
  *  - https://threejs.org/examples/physics_rapier_instancing

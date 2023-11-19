@@ -34,3 +34,5 @@ Projects, Demo & Repos
 ----------------------
 
 * [viridia/demo-rapier-three](https://github.com/viridia/demo-rapier-three)
+* [tamani-coding/threejs-rapier3d-character-terrain-movement](https://github.com/tamani-coding/threejs-rapier3d-character-terrain-movement)
+  * [three.js & rapier3D - Character Terrain Movement](https://www.youtube.com/watch?v=voGmsOuB3Rk)
