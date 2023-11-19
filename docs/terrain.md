@@ -6,7 +6,11 @@ Terrain
 * [Polygonal Map Generation for Games](http://www-cs-students.stanford.edu/~amitp/game-programming/polygon-map-generation/)
 * [Polygon map generator](https://www.redblobgames.com/maps/mapgen2/)
 * [Noise in Game Art](https://simblob.blogspot.com/2009/06/noise-in-game-art.html)
+* [terrain-building-with-threejs](https://blog.mastermaps.com/2013/10/terrain-building-with-threejs.html)
 
+* [terrain-map-three-js](https://stackoverflow.com/questions/70642140/terrain-map-three-js)
+* https://pnichols04.github.io/sc2k-map/
+* [Procedural Hexagon Terrain - ThreeJS + React ](https://www.reddit.com/r/gamedev/comments/s1k6gm/procedural_hexagon_terrain_threejs_react_code_in/)
 
 Terms & Keywords
 ----------------
@@ -37,3 +41,6 @@ Projects, Demo & Repos
 * [tamani-coding/threejs-rapier3d-character-terrain-movement](https://github.com/tamani-coding/threejs-rapier3d-character-terrain-movement)
   * [three.js & rapier3D - Character Terrain Movement](https://www.youtube.com/watch?v=voGmsOuB3Rk)
 * [pravinpoudel/three.js-boilerplate](https://github.com/pravinpoudel/three.js-boilerplate)
+* [turban/webgl-terrain](https://github.com/turban/webgl-terrain/tree/master)
+* [pnichols04/sc2k-map](https://github.com/pnichols04/sc2k-map)
+* [jeromeetienne/threex.terrain](https://github.com/jeromeetienne/threex.terrain)

@@ -3,6 +3,7 @@ import { default as demoTerrain02 } from "./02/webglGeometryTerrain.js";
 import { default as demoTerrain03 } from "./03/03webglTerrainRayCast.js";
 import { default as demoTerrain04 } from "./04/physicsAmmo.js";
 import { default as demoTerrain05 } from "./05/SimpleTerrain.js";
+import { default as demoTerrain06 } from "./05/SimpleTerrain2.js";
 
 export {
     demoTerrain01,
@@ -10,4 +11,5 @@ export {
     demoTerrain03,
     demoTerrain04,
     demoTerrain05,
+    demoTerrain06,
 }

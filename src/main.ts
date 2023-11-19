@@ -19,6 +19,7 @@ import {
     demoTerrain03,
     demoTerrain04,
     demoTerrain05,
+    demoTerrain06,
 } from "./app/examples/terrain/demos.js";
 
 import {
@@ -39,11 +40,12 @@ const DEMOS = {
     demoTerrain03: demoTerrain03,
     demoTerrain04: demoTerrain04,
     demoTerrain05: demoTerrain05,
+    demoTerrain06: demoTerrain06,
 
     demoPhysics01: demoPhysics01,
     demoPhysics02: demoPhysics02,
 };
-const DEFAULT_DEMO_INDEX = 9;
+const DEFAULT_DEMO_INDEX = 10;
 
 
 
