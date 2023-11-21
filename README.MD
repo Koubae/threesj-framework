@@ -41,4 +41,4 @@ Websites with Threejs
 * [shoe-configurator](https://codesandbox.io/s/shoe-configurator-qxjoj)
 * [webgl_terrain_dynamic](https://alteredqualia.com/three/examples/webgl_terrain_dynamic.html)
 
-
+https://discourse.threejs.org/t/how-to-color-individual-faces-of-a-boxgeometry-tononindexed-object-using-vertices/30099

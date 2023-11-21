@@ -11,6 +11,7 @@ Terrain
 * [terrain-map-three-js](https://stackoverflow.com/questions/70642140/terrain-map-three-js)
 * https://pnichols04.github.io/sc2k-map/
 * [Procedural Hexagon Terrain - ThreeJS + React ](https://www.reddit.com/r/gamedev/comments/s1k6gm/procedural_hexagon_terrain_threejs_react_code_in/)
+* [Normals](https://relativity.net.au/gaming/java/normals.html)
 
 Terms & Keywords
 ----------------
@@ -25,6 +26,7 @@ Terms & Keywords
 * [Voronoi Diagram](https://en.wikipedia.org/wiki/Voronoi_diagram)
 * fudge factor
 * Biomes
+* Normals
 
 
 Frameworks & Libraries

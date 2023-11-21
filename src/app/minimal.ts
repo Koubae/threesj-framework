@@ -2,10 +2,10 @@ import * as THREE from 'three';
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
 
-export default function game() {
+export default function game(settings: Object) {
     // Scene
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x666666);
+    scene.background = new THREE.Color(settings.color ? settings.color : 0x666666);
 
     // Renderer
     const renderer = new THREE.WebGLRenderer({antialias: true});
@@ -17,26 +17,33 @@ export default function game() {
     const stats = new Stats();
     document.body.appendChild(stats.dom);
     // Camera
-    const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 2000);
     camera.position.set(-10, 10, 2);
     camera.lookAt(0, 0.5, 0);
 
     // Controls
-    const controls = new OrbitControls(camera, renderer.domElement);
-    controls.listenToKeyEvents(renderer.domElement);
-    controls.enableDamping = true
-    controls.enablePan = true
-    controls.maxPolarAngle = Math.PI / 2 - 0.05     // prevent camera below ground
-    controls.minPolarAngle = Math.PI / 4            // prevent top-down view
-    controls.update();
+    const enableControls = settings.controls !== undefined ? settings.controls : true;
+    const freeFlight = settings.freeFlight !== undefined ? settings.freeFlight : false;
+    let controls;
+    if (enableControls) {
+        controls = new OrbitControls(camera, renderer.domElement);
+        controls.listenToKeyEvents(renderer.domElement);
+        controls.enableDamping = true
+        controls.enablePan = true
+        if (!freeFlight) {
+            controls.maxPolarAngle = Math.PI / 2 - 0.05     // prevent camera below ground
+            controls.minPolarAngle = Math.PI / 4            // prevent top-down view
+        }
+        controls.update();
+    }
 
     // Lighting
     scene.add(new THREE.AmbientLight('white', 0.4));
-    scene.add(new THREE.HemisphereLight());
+    // scene.add(new THREE.HemisphereLight());
 
     const light1 = new THREE.DirectionalLight(0xffffff, 1);
     const light1Direction = 35;
-    light1.position.set(20, 30, 5);
+    light1.position.set(20, 100, 5);
     light1.castShadow = true;
     light1.shadow.camera.zoom = 2;
     light1.shadow.mapSize.width = 4096;
@@ -47,7 +54,7 @@ export default function game() {
     light1.shadow.camera.bottom = -light1Direction;
     scene.add(light1);
 
-    window.addEventListener('resize', ()  => {
+    window.addEventListener('resize', () => {
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
@@ -58,7 +65,8 @@ export default function game() {
         gameLoop = $gameLoop;
     }
 
-    const textureLoader =  new THREE.TextureLoader();
+    const textureLoader = new THREE.TextureLoader();
+
     function loadTexture(path: string): THREE.Texture {
         const texture = textureLoader.load(path);
         texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
