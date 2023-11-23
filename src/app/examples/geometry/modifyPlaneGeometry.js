@@ -268,7 +268,25 @@ export default function demo() {
 
             }
             _geometry.computeVertexNormals();
-            console.info(_geometry.attributes.position.array);
+
+            const attributes = _geometry.attributes;
+            console.log(JSON.stringify({
+                index:  {
+                    array: _geometry.index ? _geometry.index.array : null
+                },
+                normal: {
+                    array: attributes.normal ? attributes.normal.array : null
+                },
+                position: {
+                    array: attributes.position ? attributes.position.array : null
+                },
+                color: {
+                    array: attributes.color ? attributes.color.array : null
+                },
+                uv: {
+                    array: attributes.uv ? attributes.uv.array : null
+                },
+            }));
         });
 
     }
