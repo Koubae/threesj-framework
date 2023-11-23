@@ -14,6 +14,7 @@ import {
 import {
     geometryDemo01,
     geometryDemo02,
+    geometryDemo03,
 } from "./app/examples/geometry/demos.ts";
 
-geometryDemo02();
+geometryDemo03();

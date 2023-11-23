@@ -12,6 +12,15 @@ Terrain
 * https://pnichols04.github.io/sc2k-map/
 * [Procedural Hexagon Terrain - ThreeJS + React ](https://www.reddit.com/r/gamedev/comments/s1k6gm/procedural_hexagon_terrain_threejs_react_code_in/)
 * [Normals](https://relativity.net.au/gaming/java/normals.html)
+* [Xindex2018](https://hofk.de/main/discourse.threejs/2018/Xindex2018.html)
+* [Triangle Point](http://www.jeffreythompson.org/collision-detection/tri-point.php)
+
+#### Morh Attributes
+
+* [Buffer geometry morph attributes - threejs demo](https://www.youtube.com/watch?v=fAvJjuLP_m8)
+  * [threejs-buffer-geometry-morph-attributes](https://github.com/dustinpfister/test_threejs/tree/master/views/forpost/threejs-buffer-geometry-morph-attributes)
+  * [threejs-buffer-geometry-morph-attributes](https://dustinpfister.github.io/2023/02/03/threejs-buffer-geometry-morph-attributes/)
+
 
 Terms & Keywords
 ----------------

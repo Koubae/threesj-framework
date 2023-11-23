@@ -520,7 +520,7 @@ export default function demo() {
     // cubeColor();
     // bufferGeometryDemo();
     // simpleTriangle();
-    pointShape();
+    // pointShape();
 
 
     setGameLoop((delta) => {
