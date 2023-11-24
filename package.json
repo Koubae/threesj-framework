@@ -14,6 +14,7 @@
     "dependencies": {
         "@dimforge/rapier3d": "^0.11.2",
         "alea": "^1.0.1",
+        "dat.gui": "^0.7.9",
         "simplex-noise": "^4.0.1",
         "three": "^0.158.0",
         "three.terrain.js": "^2.0.0"

@@ -1,3 +1,4 @@
+// @ts-ignore
 import * as THREE from 'three';
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -27,13 +28,18 @@ export default function game(settings: Object) {
     let controls;
     if (enableControls) {
         controls = new OrbitControls(camera, renderer.domElement);
-        controls.listenToKeyEvents(renderer.domElement);
-        controls.enableDamping = true
-        controls.enablePan = true
+        controls.keys = { LEFT: 'KeyA', UP: 'KeyW', RIGHT: 'KeyD', BOTTOM: 'KeyS' };
+        controls.enableDamping = true;
+        controls.enablePan = true;
+        controls.panSpeed = 1.25;
+        controls.keyPanSpeed = 14.0 * 2;	        // pixels moved per arrow key push
+        controls.rotateSpeed = 0.1;
+
         if (!freeFlight) {
-            controls.maxPolarAngle = Math.PI / 2 - 0.05     // prevent camera below ground
-            controls.minPolarAngle = Math.PI / 4            // prevent top-down view
+            controls.maxPolarAngle = Math.PI / 2.005;  // vertically orbit stops at ground level || Math.PI / 2 - 0.05
+            controls.minPolarAngle = Math.PI / 4;            // prevent top-down view
         }
+        controls.listenToKeyEvents(window);
         controls.update();
     }
 
