@@ -3,6 +3,9 @@ import game from "../../../minimal";
 import gui from "./gui.js";
 
 export default class TerrainEditor {
+    TERRAIN_DEFAULT_SIZE = new THREE.Vector3(1000, 1, 1000);
+    TERRAIN_DEFAULT_SEGMENTS = 50;
+
     constructor() {
         const gameBoot = game({color: "black", controls: true, freeFlight: true});
 
@@ -34,14 +37,17 @@ export default class TerrainEditor {
         this.camera.lookAt(0, 0, 0);
 
         this.terrain = this.#createTerrain();
-
+        window.t = this.terrain;
         gui(this);
     }
 
     #createTerrain() {
-        const size = new THREE.Vector3(1000, 1, 1000);
-        const segments = 50;
-        const geometry = new THREE.PlaneGeometry(size.x, size.z, segments, segments);
+        const geometry = new THREE.PlaneGeometry(
+            this.TERRAIN_DEFAULT_SIZE.x,
+            this.TERRAIN_DEFAULT_SIZE.z,
+            this.TERRAIN_DEFAULT_SEGMENTS,
+            this.TERRAIN_DEFAULT_SEGMENTS
+        );
         const ground = new THREE.Mesh(
             geometry,
             new THREE.MeshStandardMaterial({

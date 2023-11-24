@@ -1,4 +1,5 @@
 import * as dat from 'dat.gui';
+import * as THREE from "three";
 
 /**
  *
@@ -7,18 +8,16 @@ import * as dat from 'dat.gui';
 export default function gui(editor) {
     let gui = new dat.GUI({name: 'Terrain Editor'});
 
-    const settings = {
-        reset: function () {
-            editor.terrain.scale.x = 1;
-            editor.terrain.scale.y = 1;
-            editor.terrain.scale.z = 1;
-            editor.terrain.material.wireframe = false;
-        }
-    };
-    gui.add(settings, 'reset');
+    const settings = {};
+
 
     let folder_Plane = gui.addFolder('Plane');
-
+    settings["Reset Plane"] = () => {
+        editor.terrain.scale.x = 1;
+        editor.terrain.scale.y = 1;
+        editor.terrain.material.wireframe = false;
+    }
+    folder_Plane.add(settings, 'Reset Plane');
     folder_Plane.add(editor.terrain.scale, 'x', 0, 1000).step(1).name('Width').listen();
     folder_Plane.add(editor.terrain.scale, 'y', 0, 1000).step(1).name('Length').listen();
     folder_Plane.add(editor.terrain.material, 'wireframe');
@@ -63,5 +62,41 @@ export default function gui(editor) {
     folder_Controls.add(editor.controls, 'enablePan');
     folder_Controls.add(editor.controls, 'panSpeed', 0, 50).step(0.1).name('Pan Speed');
     folder_Controls.add(editor.controls, 'keyPanSpeed', 0, 50).step(0.1).name('Key Pan Speed');
+
+
+    /**
+     * This is not working very well
+     */
+    function updateGeometryFromThreeJSWebSite() {
+        function updateGroupGeometry(mesh, geometry) {
+            console.log(mesh);
+
+            mesh.children.forEach(child => child.geometry.dispose());
+            mesh.children[0].geometry = new THREE.WireframeGeometry(geometry);
+            mesh.children[1].geometry = geometry;
+
+        }
+
+        const data = {
+            width: 10,
+            height: 10,
+            widthSegments: 1,
+            heightSegments: 1
+        };
+
+        function generateGeometry() {
+            updateGroupGeometry(editor.terrain,
+                new THREE.PlaneGeometry(
+                    data.width, data.height, data.widthSegments, data.heightSegments
+                )
+            );
+        }
+
+        folder_Plane.add(data, 'width', 1, 30).onChange(generateGeometry);
+        folder_Plane.add(data, 'height', 1, 30).onChange(generateGeometry);
+        folder_Plane.add(data, 'widthSegments', 1, 30).step(1).onChange(generateGeometry);
+        folder_Plane.add(data, 'heightSegments', 1, 30).step(1).onChange(generateGeometry);
+
+    }
 
 }
