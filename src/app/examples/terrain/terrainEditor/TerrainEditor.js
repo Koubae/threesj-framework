@@ -29,8 +29,7 @@ export default class TerrainEditor {
         this.animate(0);
     }
 
-    _gameLoop(delta) {
-    }
+    _gameLoop(delta) {}
 
     #setUP() {
         this.camera.position.set(1, 300, 500);
