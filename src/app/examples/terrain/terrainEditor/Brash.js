@@ -1,16 +1,17 @@
 import * as THREE from "three";
+import {EditorMultiplePointyMountains, EditorPointyMountains} from "./editors/index.js";
 
 
 export default class Brash {
     BRASH_MARGIN_Y = 2;
 
     constructor(editor, brashSize, segments = 32, lightSettings = null) {
-        this.editor = editor;
-        this.scene = this.editor.scene;
-        this.camera = this.editor.camera;
-        this.controls = this.editor.controls;
-        this.terrain = this.editor.terrain;
-        this.points = this.editor.points;
+        this.editorManager = editor;
+        this.scene = this.editorManager.scene;
+        this.camera = this.editorManager.camera;
+        this.controls = this.editorManager.controls;
+        this.terrain = this.editorManager.terrain;
+        this.points = this.editorManager.points;
         this.brashSize = brashSize;
         this.segments = segments;
         this.lightSettings = lightSettings || {
@@ -31,25 +32,22 @@ export default class Brash {
         this.pointerIntersection = new THREE.Vector3();
         this.pointerShift = new THREE.Vector3();
 
-        // Drag
-        this.drag = false;
-        this.grabbedClosest = null;
-        this.grabbedObjects = null;
-
-        this.dragPlane = new THREE.Plane();
-        this.dragPlaneNormal = new THREE.Vector3(0, 1, 0);
-        this.dragIntersection = new THREE.Vector3();
-        this.dragPoint = new THREE.Vector3();
-        this.dragShift = new THREE.Vector3();
-
         // Modes
-        this.high_peak = true;
+        this.editors = {
+            "Pointy Mountains": new EditorPointyMountains(this),
+            "Multy Pointy Mountains": new EditorMultiplePointyMountains(this),
+        }
+        this.currentEditor = "Pointy Mountains";
 
         this.#buildLight();
         this.scene.add(this.brash);
 
         this.#buildEvents();
 
+    }
+
+    get editor() {
+        return this.editors[this.currentEditor];
     }
 
     #buildBrash() {
@@ -85,43 +83,19 @@ export default class Brash {
 
     onPointerDown(event) {
         if (!event.shiftKey) return;
-        this.updateRay(event);
+        this.editor.onPointerDown(event);
 
-        const intersects = this.rayCaster.intersectObject(this.points, false);  // if set recursive true, we could get also independently the LineSegments!
-        if (!intersects.length) return;
-
-        this.controls.enabled = false;
-        this.drag = true;
-        this.grabbedClosest = intersects[0];
-        this.grabbedObjects = {};
-        intersects.forEach(dragObject => {
-            if (dragObject.index && !(dragObject.index in this.grabbedObjects)) this.grabbedObjects[dragObject.index] = dragObject;
-        });
-
-        this.dragPoint.copy(this.grabbedClosest.point);
-        // To move it in 3D depending on camera position (top,bottom etc..)
-        this.dragPlaneNormal.subVectors(this.camera.position, this.dragPoint).normalize();  //Change direction based on camera
-        if (this.high_peak) {
-            // we set the drag plane here already! The first object is the actual center point. The mountain peak will be at the center of pointer
-            this.dragPlane.setFromNormalAndCoplanarPoint(this.dragPlaneNormal, this.dragPoint);
-        }
-
-        this.dragShift.subVectors(this.grabbedClosest.object.position, this.dragPoint);
     }
 
-    onPointerUp(_) {
-        this.drag = false;
-        this.grabbedClosest = null;
-        this.grabbedObjects = null;
-        this.controls.enabled = true;
+    onPointerUp(event) {
+        this.editor.onPointerUp(event);
     }
 
     onPointerMove(event) {
         this.updateRay(event);
         this.moveBrush();
-        if (event.shiftKey) {
-          this.modifyTerrain();
-        }
+        this.editor.onPointerMove(event);
+
     }
 
     moveBrush() {
@@ -138,32 +112,6 @@ export default class Brash {
         })
         this.brash.position.y = highestPoint + this.BRASH_MARGIN_Y;
     }
-
-    modifyTerrain() {
-        if (!this.drag || !this.grabbedClosest) return;
-
-        const _geometry = this.grabbedClosest.object.geometry;
-        if (this.high_peak) {
-            // Setting high point one that is the same
-            this.rayCaster.ray.intersectPlane(this.dragPlane, this.dragIntersection);
-            this.grabbedClosest.object.worldToLocal(this.dragIntersection);
-        }
-
-        for (const [index, _dragObject] of Object.entries(this.grabbedObjects)) {
-            const position = _geometry.attributes.position;
-            if (!this.high_peak) {
-                this.dragPlane.setFromNormalAndCoplanarPoint(this.dragPlaneNormal, _dragObject.point);
-                this.rayCaster.ray.intersectPlane(this.dragPlane, this.dragIntersection);
-                _dragObject.object.worldToLocal(this.dragIntersection);
-            }
-
-            position.setXYZ(index, this.dragIntersection.x, this.dragIntersection.y, this.dragIntersection.z);
-            position.needsUpdate = true;
-
-        }
-        _geometry.computeVertexNormals();
-    }
-
 
     updateRay(event) {
         this.updatePointer(event);
