@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import game from "../../../minimal";
 import gui from "./gui.js";
+import Brash from "./Brash.js";
 
 export default class TerrainEditor {
     TERRAIN_DEFAULT_SIZE = new THREE.Vector3(1000, 1, 1000);
@@ -21,6 +22,8 @@ export default class TerrainEditor {
 
         this._color = new THREE.Color();
 
+        this.terrain = this.#createTerrain();
+        this.brash = new Brash(this.scene,  this.camera,50);
         this.#setUP();
 
     }
@@ -34,9 +37,6 @@ export default class TerrainEditor {
     #setUP() {
         this.camera.position.set(1, 300, 500);
         this.camera.lookAt(0, 0, 0);
-
-        this.terrain = this.#createTerrain();
-        window.t = this.terrain;
         gui(this);
     }
 
