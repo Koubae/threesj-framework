@@ -8,7 +8,7 @@ export default class TerrainEditor {
     TERRAIN_DEFAULT_SEGMENTS = 50;
 
     constructor() {
-        const gameBoot = game({color: "black", controls: true, freeFlight: true});
+        const gameBoot = game({color: "black", controls: true, freeFlight: true, controlsSettings: {keyPanSpeed: 14.0 * 4}});
 
         this.animate = gameBoot.animate;
         this.renderer = gameBoot.renderer;
@@ -22,8 +22,11 @@ export default class TerrainEditor {
 
         this._color = new THREE.Color();
 
-        this.terrain = this.#createTerrain();
-        this.brash = new Brash(this.scene, this.camera, this.terrain,50);
+        const [ground, points] = this.#createTerrain();
+
+        this.terrain = ground;
+        this.points = points;
+        this.brash = new Brash(this,50);
         this.#setUP();
 
     }
@@ -68,7 +71,7 @@ export default class TerrainEditor {
 
         this.scene.add(points);
         this.scene.add(ground);
-        return ground;
+        return [ground, points];
     }
 
 }

@@ -25,14 +25,16 @@ export default function game(settings: Object) {
     // Controls
     const enableControls = settings.controls !== undefined ? settings.controls : true;
     const freeFlight = settings.freeFlight !== undefined ? settings.freeFlight : false;
+
     let controls;
     if (enableControls) {
+        const controlsSettings = settings.controlsSettings !== undefined ? settings.controlsSettings : {};
         controls = new OrbitControls(camera, renderer.domElement);
-        controls.keys = { LEFT: 'KeyA', UP: 'KeyW', RIGHT: 'KeyD', BOTTOM: 'KeyS' };
+        controls.keys = {LEFT: 'KeyA', UP: 'KeyW', RIGHT: 'KeyD', BOTTOM: 'KeyS'};
         controls.enableDamping = true;
         controls.enablePan = true;
         controls.panSpeed = 1.25;
-        controls.keyPanSpeed = 14.0 * 2;	        // pixels moved per arrow key push
+        controls.keyPanSpeed = controlsSettings.keyPanSpeed ? controlsSettings.keyPanSpeed : 14.0 * 2;  // pixels moved per arrow key push
         controls.rotateSpeed = 0.1;
 
         if (!freeFlight) {

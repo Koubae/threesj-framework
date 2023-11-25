@@ -4,10 +4,13 @@ import * as THREE from "three";
 export default class Brash {
     BRASH_MARGIN_Y = 2;
 
-    constructor(scene, camera, terrain, brashSize, segments = 32, lightSettings = null) {
-        this.scene = scene;
-        this.camera = camera;
-        this.terrain = terrain;
+    constructor(editor, brashSize, segments = 32, lightSettings = null) {
+        this.editor = editor;
+        this.scene = this.editor.scene;
+        this.camera = this.editor.camera;
+        this.controls = this.editor.controls;
+        this.terrain = this.editor.terrain;
+        this.points = this.editor.points;
         this.brashSize = brashSize;
         this.segments = segments;
         this.lightSettings = lightSettings || {
@@ -27,6 +30,20 @@ export default class Brash {
         this.pointerPlane = new THREE.Plane(this.pointerPlaneNormal);
         this.pointerIntersection = new THREE.Vector3();
         this.pointerShift = new THREE.Vector3();
+
+        // Drag
+        this.drag = false;
+        this.dragObject = null;
+        this.dragObjects = null;
+
+        this.dragPlane = new THREE.Plane();
+        this.dragPlaneNormal = new THREE.Vector3(0, 1, 0);
+        this.dragIntersection = new THREE.Vector3();
+        this.dragPoint = new THREE.Vector3();
+        this.dragShift = new THREE.Vector3();
+
+        // Modes
+        this.high_peak = true;
 
         this.#buildLight();
         this.scene.add(this.brash);
@@ -67,14 +84,41 @@ export default class Brash {
     }
 
     onPointerDown(event) {
+        this.updateRay(event);
+
+        const intersects = this.rayCaster.intersectObject(this.points, false);  // if set recursive true, we could get also independently the LineSegments!
+        if (!intersects.length) return;
+
+        this.controls.enabled = false;
+        this.drag = true;
+        this.dragObject = intersects[0];
+        this.dragObjects = {};
+        intersects.forEach(dragObject => {
+            if (dragObject.index && !(dragObject.index in this.dragObjects)) this.dragObjects[dragObject.index] = dragObject;
+        });
+
+        this.dragPoint.copy(this.dragObject.point);
+        // To move it in 3D depending on camera position (top,bottom etc..)
+        this.dragPlaneNormal.subVectors(this.camera.position, this.dragPoint).normalize();  //Change direction based on camera
+        if (this.high_peak) {
+            // we set the drag plane here already! The first object is the actual center point. The mountain peak will be at the center of pointer
+            this.dragPlane.setFromNormalAndCoplanarPoint(this.dragPlaneNormal, this.dragPoint);
+        }
+
+        this.dragShift.subVectors(this.dragObject.object.position, this.dragPoint);
     }
 
-    onPointerUp(event) {
+    onPointerUp(_) {
+        this.drag = false;
+        this.dragObject = null;
+        this.dragObjects = null;
+        this.controls.enabled = true;
     }
 
     onPointerMove(event) {
         this.updateRay(event);
         this.moveBrush();
+        this.modifyTerrain();
     }
 
     moveBrush() {
@@ -91,6 +135,32 @@ export default class Brash {
         })
         this.brash.position.y = highestPoint + this.BRASH_MARGIN_Y;
     }
+
+    modifyTerrain() {
+        if (!this.drag || !this.dragObject) return;
+
+        const _geometry = this.dragObject.object.geometry;
+        if (this.high_peak) {
+            // Setting high point one that is the same
+            this.rayCaster.ray.intersectPlane(this.dragPlane, this.dragIntersection);
+            this.dragObject.object.worldToLocal(this.dragIntersection);
+        }
+
+        for (const [index, _dragObject] of Object.entries(this.dragObjects)) {
+            const position = _geometry.attributes.position;
+            if (!this.high_peak) {
+                this.dragPlane.setFromNormalAndCoplanarPoint(this.dragPlaneNormal, _dragObject.point);
+                this.rayCaster.ray.intersectPlane(this.dragPlane, this.dragIntersection);
+                _dragObject.object.worldToLocal(this.dragIntersection);
+            }
+
+            position.setXYZ(index, this.dragIntersection.x, this.dragIntersection.y, this.dragIntersection.z);
+            position.needsUpdate = true;
+
+        }
+        _geometry.computeVertexNormals();
+    }
+
 
     updateRay(event) {
         this.updatePointer(event);
