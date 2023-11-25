@@ -33,8 +33,8 @@ export default class Brash {
 
         // Drag
         this.drag = false;
-        this.dragObject = null;
-        this.dragObjects = null;
+        this.grabbedClosest = null;
+        this.grabbedObjects = null;
 
         this.dragPlane = new THREE.Plane();
         this.dragPlaneNormal = new THREE.Vector3(0, 1, 0);
@@ -92,13 +92,13 @@ export default class Brash {
 
         this.controls.enabled = false;
         this.drag = true;
-        this.dragObject = intersects[0];
-        this.dragObjects = {};
+        this.grabbedClosest = intersects[0];
+        this.grabbedObjects = {};
         intersects.forEach(dragObject => {
-            if (dragObject.index && !(dragObject.index in this.dragObjects)) this.dragObjects[dragObject.index] = dragObject;
+            if (dragObject.index && !(dragObject.index in this.grabbedObjects)) this.grabbedObjects[dragObject.index] = dragObject;
         });
 
-        this.dragPoint.copy(this.dragObject.point);
+        this.dragPoint.copy(this.grabbedClosest.point);
         // To move it in 3D depending on camera position (top,bottom etc..)
         this.dragPlaneNormal.subVectors(this.camera.position, this.dragPoint).normalize();  //Change direction based on camera
         if (this.high_peak) {
@@ -106,13 +106,13 @@ export default class Brash {
             this.dragPlane.setFromNormalAndCoplanarPoint(this.dragPlaneNormal, this.dragPoint);
         }
 
-        this.dragShift.subVectors(this.dragObject.object.position, this.dragPoint);
+        this.dragShift.subVectors(this.grabbedClosest.object.position, this.dragPoint);
     }
 
     onPointerUp(_) {
         this.drag = false;
-        this.dragObject = null;
-        this.dragObjects = null;
+        this.grabbedClosest = null;
+        this.grabbedObjects = null;
         this.controls.enabled = true;
     }
 
@@ -140,16 +140,16 @@ export default class Brash {
     }
 
     modifyTerrain() {
-        if (!this.drag || !this.dragObject) return;
+        if (!this.drag || !this.grabbedClosest) return;
 
-        const _geometry = this.dragObject.object.geometry;
+        const _geometry = this.grabbedClosest.object.geometry;
         if (this.high_peak) {
             // Setting high point one that is the same
             this.rayCaster.ray.intersectPlane(this.dragPlane, this.dragIntersection);
-            this.dragObject.object.worldToLocal(this.dragIntersection);
+            this.grabbedClosest.object.worldToLocal(this.dragIntersection);
         }
 
-        for (const [index, _dragObject] of Object.entries(this.dragObjects)) {
+        for (const [index, _dragObject] of Object.entries(this.grabbedObjects)) {
             const position = _geometry.attributes.position;
             if (!this.high_peak) {
                 this.dragPlane.setFromNormalAndCoplanarPoint(this.dragPlaneNormal, _dragObject.point);
