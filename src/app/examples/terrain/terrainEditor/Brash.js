@@ -84,6 +84,7 @@ export default class Brash {
     }
 
     onPointerDown(event) {
+        if (!event.shiftKey) return;
         this.updateRay(event);
 
         const intersects = this.rayCaster.intersectObject(this.points, false);  // if set recursive true, we could get also independently the LineSegments!
@@ -118,7 +119,9 @@ export default class Brash {
     onPointerMove(event) {
         this.updateRay(event);
         this.moveBrush();
-        this.modifyTerrain();
+        if (event.shiftKey) {
+          this.modifyTerrain();
+        }
     }
 
     moveBrush() {
