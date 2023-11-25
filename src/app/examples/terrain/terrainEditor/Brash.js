@@ -2,9 +2,12 @@ import * as THREE from "three";
 
 
 export default class Brash {
-    constructor(scene, camera, brashSize, segments = 32, lightSettings = null) {
+    BRASH_MARGIN_Y = 2;
+
+    constructor(scene, camera, terrain, brashSize, segments = 32, lightSettings = null) {
         this.scene = scene;
         this.camera = camera;
+        this.terrain = terrain;
         this.brashSize = brashSize;
         this.segments = segments;
         this.lightSettings = lightSettings || {
@@ -19,12 +22,11 @@ export default class Brash {
         this.rayCaster.params.Points.threshold = this.brashSize;
         this.pointer = new THREE.Vector2();
 
-       // Pointer Ray
+        // Pointer Ray
         this.pointerPlaneNormal = new THREE.Vector3(0, 1, 0);
         this.pointerPlane = new THREE.Plane(this.pointerPlaneNormal);
         this.pointerIntersection = new THREE.Vector3();
         this.pointerShift = new THREE.Vector3();
-
 
         this.#buildLight();
         this.scene.add(this.brash);
@@ -78,6 +80,16 @@ export default class Brash {
     moveBrush() {
         this.rayCaster.ray.intersectPlane(this.pointerPlane, this.pointerIntersection);
         this.brash.position.addVectors(this.pointerIntersection, this.pointerShift);
+        this.#moveBrashOnTopOfObstacles();
+    }
+
+    #moveBrashOnTopOfObstacles() {
+        const intersects = this.rayCaster.intersectObject(this.terrain, false);
+        let highestPoint = 0;
+        intersects.forEach(intersection => {
+            if (intersection.point.y > highestPoint) highestPoint = intersection.point.y;
+        })
+        this.brash.position.y = highestPoint + this.BRASH_MARGIN_Y;
     }
 
     updateRay(event) {

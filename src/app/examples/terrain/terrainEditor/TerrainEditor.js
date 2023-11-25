@@ -23,7 +23,7 @@ export default class TerrainEditor {
         this._color = new THREE.Color();
 
         this.terrain = this.#createTerrain();
-        this.brash = new Brash(this.scene,  this.camera,50);
+        this.brash = new Brash(this.scene, this.camera, this.terrain,50);
         this.#setUP();
 
     }
