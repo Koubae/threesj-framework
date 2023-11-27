@@ -1,9 +1,10 @@
 import * as THREE from "three";
-import {EditorMultiplePointyMountains, EditorPointyMountains} from "./editors/index.js";
+import * as editors from "./editors/index.js";
 
 
 export default class Brash {
     BRASH_MARGIN_Y = 2;
+    BRASH_CAMERA_MARGIN_Y = 0;
 
     constructor(editor, brashSize, segments = 32, lightSettings = null) {
         this.editorManager = editor;
@@ -22,8 +23,13 @@ export default class Brash {
         }
         this.brash = this.#buildBrash();
 
+        this.brashCamera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 2000);
+        this.brashCamera.rotateX(-Math.PI / 2);
+
         this.rayCaster = new THREE.Raycaster();
-        this.rayCaster.params.Points.threshold = this.brashSize;
+
+        this.rayCasterBrash = new THREE.Raycaster();
+        this.rayCasterBrash.params.Points.threshold = this.brashSize;
         this.pointer = new THREE.Vector2();
 
         // Pointer Ray
@@ -34,13 +40,19 @@ export default class Brash {
 
         // Modes
         this.editors = {
-            "Pointy Mountains": new EditorPointyMountains(this),
-            "Multy Pointy Mountains": new EditorMultiplePointyMountains(this),
+            "Pointy Mountains": new editors.EditorPointyMountains(this),
+            "Multy Pointy Mountains": new editors.EditorMultiplePointyMountains(this),
+            "Round Mountain": new editors.EditorRoundMountain(this),
+            "Debug Points": new editors.EditorDebugChangeColorPoints(this),
         }
-        this.currentEditor = "Pointy Mountains";
+        this.currentEditor = "Debug Points";
 
         this.#buildLight();
+
+        this.scene.add(this.brashCamera);
         this.scene.add(this.brash);
+
+        this.scene.add(new THREE.CameraHelper((this.brashCamera)));
 
         this.#buildEvents();
 
@@ -95,13 +107,13 @@ export default class Brash {
         this.updateRay(event);
         this.moveBrush();
         this.editor.onPointerMove(event);
-
     }
 
     moveBrush() {
         this.rayCaster.ray.intersectPlane(this.pointerPlane, this.pointerIntersection);
         this.brash.position.addVectors(this.pointerIntersection, this.pointerShift);
         this.#moveBrashOnTopOfObstacles();
+        this.#moveCamera();
     }
 
     #moveBrashOnTopOfObstacles() {
@@ -113,9 +125,19 @@ export default class Brash {
         this.brash.position.y = highestPoint + this.BRASH_MARGIN_Y;
     }
 
+    #moveCamera() {
+        this.brashCamera.position.set(this.brash.position.x, this.brash.position.y + this.BRASH_CAMERA_MARGIN_Y, this.brash.position.z);
+    }
+
+
     updateRay(event) {
         this.updatePointer(event);
         this.rayCaster.setFromCamera(this.pointer, this.camera);
+    }
+
+    updateRayBrash(event) {
+        this.updatePointer(event);
+        this.rayCasterBrash.setFromCamera(this.pointer, this.brashCamera);
     }
 
     updatePointer(event) {

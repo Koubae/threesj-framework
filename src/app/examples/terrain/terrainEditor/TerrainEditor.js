@@ -26,7 +26,7 @@ export default class TerrainEditor {
 
         this.terrain = ground;
         this.points = points;
-        this.brash = new Brash(this,50);
+        this.brash = new Brash(this, 50);
         this.#setUP();
 
     }
@@ -35,7 +35,8 @@ export default class TerrainEditor {
         this.animate(0);
     }
 
-    _gameLoop(delta) {}
+    _gameLoop(delta) {
+    }
 
     #setUP() {
         this.camera.position.set(1, 300, 500);
@@ -62,10 +63,18 @@ export default class TerrainEditor {
         ground.receiveShadow = true;
         ground.castShadow = false;
 
+        const colors = [];
+        this._color.setRGB(255, 255, 0);
+        for (let i = 0; i < geometry.attributes.position.array.length; i += 3) {
+            colors.push(this._color.r, this._color.g, this._color.b);
+        }
+        geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+
         const pointSize = 2;
         const points = new THREE.Points(geometry, new THREE.PointsMaterial({
             size: pointSize,
-            color: "yellow"
+            // color: "yellow",
+            vertexColors: true
         }));
         points.rotateX(-Math.PI / 2);
 

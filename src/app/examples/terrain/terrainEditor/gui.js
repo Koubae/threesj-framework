@@ -74,7 +74,6 @@ export default function gui(editor) {
         editor.terrain.material.color.set(settings.plane.color)
     });
 
-
     let folder_Brash = gui.addFolder('Brash');
     folder_Brash.open();
 

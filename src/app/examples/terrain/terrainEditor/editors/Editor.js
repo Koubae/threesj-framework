@@ -12,9 +12,6 @@ export default class Editor {
         this.dragIntersection = new THREE.Vector3();
         this.dragPoint = new THREE.Vector3();
         this.dragShift = new THREE.Vector3();
-
-        // temp
-        this.high_peak = true;
     }
 
     onPointerDown(event) {
@@ -25,11 +22,15 @@ export default class Editor {
 
         this.brash.controls.enabled = false;
         this.drag = true;
+
+        // sort objects by distance to ray
+        intersects.sort((a, b) => a.distanceToRay - b.distanceToRay);
         this.grabbedClosest = intersects[0];
         this.grabbedObjects = {};
         intersects.forEach(dragObject => {
             if (dragObject.index && !(dragObject.index in this.grabbedObjects)) this.grabbedObjects[dragObject.index] = dragObject;
         });
+
 
         this.dragPoint.copy(this.grabbedClosest.point);
         // To move it in 3D depending on camera position (top,bottom etc..)
