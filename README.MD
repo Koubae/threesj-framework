@@ -17,7 +17,7 @@ Docs
 * [Three js Example](http://alexan0308.github.io/threejs/examples/)
 
 * [Selecting object with mouse - Three.js](https://stackoverflow.com/questions/32955103/selecting-object-with-mouse-three-js)
-
+* [Which are the best open source visual IDEs for THREE or WebGL](https://discourse.threejs.org/t/which-are-the-best-open-source-visual-ides-for-three-or-webgl/15229)
 
 Frameworks & Libraries
 ----------------------
@@ -34,6 +34,10 @@ Projects
 * https://github.com/pineapplemachine/websand
 * [shadertoy](https://www.shadertoy.com)
 * [simplex-noise](https://www.npmjs.com/package/simplex-noise)
+* [TertiusAxis](https://dragon3dgraff.ru/TertiusAxis/)
+* [TertiusAxis - RU](https://tertiusaxis.ru/)
+* [Polygonjs](https://polygonjs.com/)
+* [bemjax.com](https://bemjax.com/)
 
 Games
 -----

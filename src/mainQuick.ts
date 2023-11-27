@@ -16,9 +16,10 @@ import {
 //     geometryDemo01,
 //     geometryDemo02,
 //     geometryDemo03,
+//     geometryExtrudeDemo01,
 // } from "./app/examples/geometry/demos.ts";
-
-// demoTerrain07();
+//
+// geometryExtrudeDemo01();
 
 const terrainEditor = new TerrainEditor();
 terrainEditor.run();

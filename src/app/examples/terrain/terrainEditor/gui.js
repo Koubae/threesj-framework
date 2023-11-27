@@ -6,7 +6,7 @@ import * as THREE from "three";
  * @type {import("./TerrainEditor.js").TerrainEditor} editor
  */
 export default function gui(editor) {
-    let gui = new dat.GUI({name: 'Terrain Editor', });
+    let gui = new dat.GUI({name: 'Terrain Editor',});
 
     const settings = {
         plane: {
@@ -16,20 +16,6 @@ export default function gui(editor) {
         camera: {},
         controls: {}
     };
-
-    let folder_Plane = gui.addFolder('Plane');
-    settings["plane"]["Reset Plane"] = () => {
-        editor.terrain.scale.x = 1;
-        editor.terrain.scale.y = 1;
-        editor.terrain.material.wireframe = false;
-        editor.terrain.material.color.set(settings.plane.defaultColor)
-    }
-    folder_Plane.add(settings.plane, 'Reset Plane');
-    folder_Plane.add(editor.terrain.scale, 'x', 0, 1000).step(1).name('Width').listen();
-    folder_Plane.add(editor.terrain.scale, 'y', 0, 1000).step(1).name('Length').listen();
-    folder_Plane.add(editor.terrain.material, 'wireframe');
-    folder_Plane.addColor(settings.plane, 'color').name('Color').onChange(function () { editor.terrain.material.color.set(settings.plane.color)});
-    folder_Plane.open();
 
     let folder_Camera = gui.addFolder("Camera");
 
@@ -71,6 +57,28 @@ export default function gui(editor) {
     folder_Controls.add(editor.controls, 'panSpeed', 0, 50).step(0.1).name('Pan Speed');
     folder_Controls.add(editor.controls, 'keyPanSpeed', 0, 50).step(0.1).name('Key Pan Speed');
 
+    let folder_Plane = gui.addFolder('Plane');
+    folder_Plane.open();
+
+    settings["plane"]["Reset Plane"] = () => {
+        editor.terrain.scale.x = 1;
+        editor.terrain.scale.y = 1;
+        editor.terrain.material.wireframe = false;
+        editor.terrain.material.color.set(settings.plane.defaultColor)
+    }
+    folder_Plane.add(settings.plane, 'Reset Plane');
+    folder_Plane.add(editor.terrain.scale, 'x', 0, 1000).step(1).name('Width').listen();
+    folder_Plane.add(editor.terrain.scale, 'y', 0, 1000).step(1).name('Length').listen();
+    folder_Plane.add(editor.terrain.material, 'wireframe');
+    folder_Plane.addColor(settings.plane, 'color').name('Color').onChange(function () {
+        editor.terrain.material.color.set(settings.plane.color)
+    });
+
+
+    let folder_Brash = gui.addFolder('Brash');
+    folder_Brash.open();
+
+    folder_Brash.add(editor.brash, "currentEditor", Object.keys(editor.brash.editors));
 
     /**
      * This is not working very well
